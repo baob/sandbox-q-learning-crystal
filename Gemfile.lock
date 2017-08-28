@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    maruku (0.7.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  maruku
+
+BUNDLED WITH
+   1.15.4
