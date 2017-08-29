@@ -1,3 +1,5 @@
+require 'board'
+
 class Game
 
   def initialize(player_1_policy, player_2_policy)
