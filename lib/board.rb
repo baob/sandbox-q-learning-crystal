@@ -32,7 +32,7 @@ class Board
     is_win_for?(1) || is_win_for?(2) || move_options.size == 0
   end
 
-  def to_s(tokens = "XO")
+  def to_s(tokens = "12")
     count = 0
     @board.each_with_object('') do |cell, string|
       if cell == 0
