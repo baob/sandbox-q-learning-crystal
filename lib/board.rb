@@ -28,6 +28,19 @@ class Board
     end.any?
   end
 
+  def to_s(tokens = "XO")
+    count = 0
+    @board.each_with_object('') do |cell, string|
+      if cell == 0
+        string << '.'
+      else
+        string << tokens[cell-1]
+      end
+      count += 1
+      string << "\n" if count % 3 == 0
+    end
+  end
+
   WINS = [
     [0, 1, 2],
     [3, 4, 5],
