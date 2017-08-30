@@ -12,11 +12,10 @@ module Policy
         raise NotImplementedError # Implement in sub-classes
       end
 
-      private
-
       def move_options(board)
         board.move_options
       end
+
     end
   end
 end

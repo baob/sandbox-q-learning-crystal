@@ -58,6 +58,13 @@ class Board
     end
   end
 
+  def to_state
+    @board.reduce(0) do |memo, digit|
+      memo = 3 * memo + digit
+      memo
+    end
+  end
+
   WINS = [
     [0, 1, 2],
     [3, 4, 5],
