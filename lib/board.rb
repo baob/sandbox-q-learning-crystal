@@ -11,6 +11,8 @@ class Board
     @board.each_with_index.select { |cell, index| cell == 0 }.map(&:last)
   end
 
+  # Player here is a number, 1 or # 2 indicating 1st or 2nd
+  #
   def apply_move(move, as_player)
     raise RuntimeError if @board[move] != 0
     raise ArgumentError unless (0..8).to_a.include?(move)
@@ -21,15 +23,26 @@ class Board
   end
 
   def is_win_for?(player)
+    # puts "checking for win by #{player}"
     WINS.map do |row|
+      # puts "checking for win on #{row.inspect} by #{player}"
       @board[row[0]] == player &&
       @board[row[1]] == player &&
       @board[row[2]] == player
     end.any?
   end
 
+  def winner
+    return 1 if is_win_for?(1)
+    return 2 if is_win_for?(2)
+  end
+
   def game_over?
-    is_win_for?(1) || is_win_for?(2) || move_options.size == 0
+    winner || no_moves_left?
+  end
+
+  def no_moves_left?
+    move_options.size == 0
   end
 
   def to_s(tokens = "12")
