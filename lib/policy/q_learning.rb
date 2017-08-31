@@ -37,6 +37,14 @@ module Policy
       exploring_moves.sample
     end
 
+    def inspect
+      "<Policy::QLearning:0x#{object_id.to_s(16)}"\
+      " explore_percent=\"#{@explore_percent}\""\
+      " learning_rate=\"#{@learning_rate}\""\
+      " discount=\"#{@discount}\""\
+      '>'
+    end
+
     private
 
     def exploring?
