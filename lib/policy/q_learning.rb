@@ -4,6 +4,8 @@ require_relative 'base'
 module Policy
   class QLearning < Base
 
+    attr_accessor :explore_percent, :learning_rate, :discount
+
     def initialize
       @explore_percent = 67
       @learning_rate = 0.8
@@ -43,6 +45,10 @@ module Policy
       " learning_rate=\"#{@learning_rate}\""\
       " discount=\"#{@discount}\""\
       '>'
+    end
+
+    def qsa_dump
+      @qsa
     end
 
     private
