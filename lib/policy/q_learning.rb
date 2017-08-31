@@ -65,14 +65,18 @@ module Policy
 
     def qsa(board, move)
       state = state_from_board(board)
-      @qsa[state] ||= []
+      @qsa[state] ||= {}
       @qsa[state][move] ||= 0.0
     end
 
     def qsa_set(board, move, new_q)
       state = state_from_board(board)
-      @qsa[state] ||= []
+      @qsa[state] ||= {}
       @qsa[state][move] = new_q
+    end
+
+    def initialize_qsa
+      @qsa = {}
     end
 
     def state_from_board(board)
@@ -97,10 +101,6 @@ module Policy
 
     def other_player(player)
       3 - player
-    end
-
-    def initialize_qsa
-      @qsa = []
     end
 
   end
