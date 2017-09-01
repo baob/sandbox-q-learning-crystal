@@ -48,13 +48,9 @@ module Policy
       '>'
     end
 
-    def qsa_non_trivial
-      qsa.qsa_non_trivial
-    end
+    attr_reader :qsa
 
     private
-
-    attr_reader :qsa
 
     def exploring?
       rand(100) < @explore_percent
