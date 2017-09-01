@@ -13,9 +13,7 @@ class Qsa
   end
 
   def get(state, move, player)
-    @qsa[state] ||= {}
-    @qsa[state][move] ||= {}
-    @qsa[state][move][player] || 0.0
+    ((@qsa[state] || {})[move] || {})[player] || 0.0
   end
 
   def qsa
