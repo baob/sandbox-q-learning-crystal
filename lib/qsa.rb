@@ -6,13 +6,13 @@ class Qsa
     @qsa = {}
   end
 
-  def qsa_set(state, move, player, new_q)
+  def set(state, move, player, new_q)
     @qsa[state] ||= {}
     @qsa[state][move] ||= {}
     @qsa[state][move][player] = new_q
   end
 
-  def qsa_get(state, move, player)
+  def get(state, move, player)
     @qsa[state] ||= {}
     @qsa[state][move] ||= {}
     @qsa[state][move][player] || 0.0

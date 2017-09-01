@@ -11,7 +11,7 @@ module Policy
       @explore_percent = 67
       @learning_rate = 0.8
       @discount = 0.9
-      @remote_qsa = Qsa.new
+      @qsa = Qsa.new
     end
 
     def play(board, as_player)
@@ -48,17 +48,13 @@ module Policy
       '>'
     end
 
-    def qsa
-      remote_qsa.qsa
-    end
-
     def qsa_non_trivial
-      remote_qsa.qsa_non_trivial
+      qsa.qsa_non_trivial
     end
 
     private
 
-    attr_reader :remote_qsa
+    attr_reader :qsa
 
     def exploring?
       rand(100) < @explore_percent
@@ -72,17 +68,17 @@ module Policy
 
     def qba_get_net(board, move, player)
       state = state_from_board(board)
-      remote_qsa.qsa_get(state, move, player) - remote_qsa.qsa_get(state, move, other_player(player))
+      qsa.get(state, move, player) - qsa.get(state, move, other_player(player))
     end
 
     def qba_get(board, move, player)
       state = state_from_board(board)
-      remote_qsa.qsa_get(state, move, player)
+      qsa.get(state, move, player)
     end
 
     def qba_set(board, move, player, new_q)
       state = state_from_board(board)
-      remote_qsa.qsa_set(state, move, player, new_q)
+      qsa.set(state, move, player, new_q)
     end
 
     def state_from_board(board)
