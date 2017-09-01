@@ -19,13 +19,13 @@ module Policy
 
       if exploring?
         move = choose_exploring_move(board, as_player, moves)
-        new_board = board.apply_move(move, as_player)
       else
         move = choose_exploiting_move(board, as_player, moves)
-        new_board = board.apply_move(move, as_player)
-        recalculate_q(board, move, new_board, as_player)
-        new_board
       end
+
+      new_board = board.apply_move(move, as_player)
+      recalculate_q(board, move, new_board, as_player)
+      new_board
     end
 
     def choose_exploiting_move(board, player, moves)
