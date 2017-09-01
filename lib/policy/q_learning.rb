@@ -29,7 +29,7 @@ module Policy
 
     def choose_exploiting_move(board, player, moves)
       return moves.first if moves.size == 1
-      moves.max { |move1, move2| qsa(board, move1) <=> qsa(board, move2) }
+      moves.max { |move1, move2| qsa_get(board, move1, player) <=> qsa_get(board, move2, player) }
     end
 
     def choose_exploring_move(board, player, moves)
@@ -47,8 +47,12 @@ module Policy
       '>'
     end
 
-    def qsa_dump
+    def qsa
       @qsa
+    end
+
+    def qsa_non_trivial
+      @qsa.reject{ |state, svalue| svalue.reject{ |move, mvalue| mvalue.select{ |player, pvalue| pvalue.abs > 0.001 } .empty? }.empty? }
     end
 
     private
@@ -58,21 +62,23 @@ module Policy
     end
 
     def recalculate_q(board, move, new_board, player)
-      new_q = (1.0 - @learning_rate) * qsa(board, move)  +
-              @learning_rate * ( reward(new_board, player) + @discount * value(new_board) )
-      qsa_set(board, move, new_q)
+      new_q = (1.0 - @learning_rate) * qsa_get(board, move, player)  +
+              @learning_rate * ( reward(new_board, player) + @discount * value(new_board, player) )
+      qsa_set(board, move, player, new_q)
     end
 
-    def qsa(board, move)
+    def qsa_get(board, move, player)
       state = state_from_board(board)
       @qsa[state] ||= {}
-      @qsa[state][move] ||= 0.0
+      @qsa[state][move] ||= {}
+      @qsa[state][move][player] ||= 0.0
     end
 
-    def qsa_set(board, move, new_q)
+    def qsa_set(board, move, player, new_q)
       state = state_from_board(board)
       @qsa[state] ||= {}
-      @qsa[state][move] = new_q
+      @qsa[state][move] ||= {}
+      @qsa[state][move][player] = new_q
     end
 
     def initialize_qsa
@@ -95,8 +101,9 @@ module Policy
       end
     end
 
-    def value(board)
-      board.move_options.map{ |move| qsa(board, move) }.max || 0.0
+    def value(board, player)
+      ( board.move_options.map{ |move| qsa_get(board, move, player) }.max || 0.0 )-
+      ( board.move_options.map{ |move| qsa_get(board, move, other_player(player)) }.max || 0.0 )
     end
 
     def other_player(player)
