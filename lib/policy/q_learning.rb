@@ -1,5 +1,6 @@
 require 'board'
 require_relative 'base'
+require 'qsa'
 
 module Policy
   class QLearning < Base
@@ -10,7 +11,7 @@ module Policy
       @explore_percent = 67
       @learning_rate = 0.8
       @discount = 0.9
-      initialize_qsa
+      @remote_qsa = Qsa.new
     end
 
     def play(board, as_player)
@@ -48,14 +49,16 @@ module Policy
     end
 
     def qsa
-      @qsa
+      remote_qsa.qsa
     end
 
     def qsa_non_trivial
-      @qsa.reject{ |state, svalue| svalue.reject{ |move, mvalue| mvalue.select{ |player, pvalue| pvalue.abs > 0.001 } .empty? }.empty? }
+      remote_qsa.qsa_non_trivial
     end
 
     private
+
+    attr_reader :remote_qsa
 
     def exploring?
       rand(100) < @explore_percent
@@ -69,33 +72,17 @@ module Policy
 
     def qba_get_net(board, move, player)
       state = state_from_board(board)
-      qsa_get(state, move, player) - qsa_get(state, move, other_player(player))
+      remote_qsa.qsa_get(state, move, player) - remote_qsa.qsa_get(state, move, other_player(player))
     end
 
     def qba_get(board, move, player)
       state = state_from_board(board)
-      qsa_get(board, move, player)
-    end
-
-    def qsa_get(state, move, player)
-      @qsa[state] ||= {}
-      @qsa[state][move] ||= {}
-      @qsa[state][move][player] || 0.0
+      remote_qsa.qsa_get(state, move, player)
     end
 
     def qba_set(board, move, player, new_q)
       state = state_from_board(board)
-      qsa_set(state, move, player, new_q)
-    end
-
-    def qsa_set(state, move, player, new_q)
-      @qsa[state] ||= {}
-      @qsa[state][move] ||= {}
-      @qsa[state][move][player] = new_q
-    end
-
-    def initialize_qsa
-      @qsa = {}
+      remote_qsa.qsa_set(state, move, player, new_q)
     end
 
     def state_from_board(board)
