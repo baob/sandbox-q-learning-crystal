@@ -1,6 +1,9 @@
 require 'board'
 require 'player'
 
+policy_files = File.expand_path('policy/**/*.rb', __dir__)
+Dir[policy_files].each(&method(:require))
+
 class Game
 
   def initialize(player_1_policy, player_2_policy, trace: true)
