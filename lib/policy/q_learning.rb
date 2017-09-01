@@ -1,5 +1,6 @@
 require 'board'
 require_relative 'base'
+require 'qsa'
 
 module Policy
   class QLearning < Base
@@ -10,7 +11,7 @@ module Policy
       @explore_percent = 67
       @learning_rate = 0.8
       @discount = 0.9
-      initialize_qsa
+      @qsa = Qsa.new
     end
 
     def play(board, as_player)
@@ -29,7 +30,7 @@ module Policy
 
     def choose_exploiting_move(board, player, moves)
       return moves.first if moves.size == 1
-      moves.max { |move1, move2| qsa_get_net(board, move1, player) <=> qsa_get_net(board, move2, player) }
+      moves.max { |move1, move2| qba_get_net(board, move1, player) <=> qba_get_net(board, move2, player) }
     end
 
     def choose_exploring_move(board, player, moves)
@@ -47,46 +48,37 @@ module Policy
       '>'
     end
 
-    def qsa
-      @qsa
-    end
-
     def qsa_non_trivial
-      @qsa.reject{ |state, svalue| svalue.reject{ |move, mvalue| mvalue.select{ |player, pvalue| pvalue.abs > 0.001 } .empty? }.empty? }
+      qsa.qsa_non_trivial
     end
 
     private
+
+    attr_reader :qsa
 
     def exploring?
       rand(100) < @explore_percent
     end
 
     def recalculate_q(board, move, new_board, player)
-      new_q = (1.0 - @learning_rate) * qsa_get(board, move, player)  +
+      new_q = (1.0 - @learning_rate) * qba_get(board, move, player)  +
               @learning_rate * ( reward(new_board, player) + @discount * value(new_board, player) )
-      qsa_set(board, move, player, new_q)
+      qba_set(board, move, player, new_q)
     end
 
-    def qsa_get_net(board, move, player)
-      qsa_get(board, move, player) - qsa_get(board, move, other_player(player))
-    end
-
-    def qsa_get(board, move, player)
+    def qba_get_net(board, move, player)
       state = state_from_board(board)
-      @qsa[state] ||= {}
-      @qsa[state][move] ||= {}
-      @qsa[state][move][player] ||= 0.0
+      qsa.get(state, move, player) - qsa.get(state, move, other_player(player))
     end
 
-    def qsa_set(board, move, player, new_q)
+    def qba_get(board, move, player)
       state = state_from_board(board)
-      @qsa[state] ||= {}
-      @qsa[state][move] ||= {}
-      @qsa[state][move][player] = new_q
+      qsa.get(state, move, player)
     end
 
-    def initialize_qsa
-      @qsa = {}
+    def qba_set(board, move, player, new_q)
+      state = state_from_board(board)
+      qsa.set(state, move, player, new_q)
     end
 
     def state_from_board(board)
@@ -106,7 +98,7 @@ module Policy
     end
 
     def value(board, player)
-      board.move_options.map{ |move| qsa_get_net(board, move, player) }.max || 0.0
+      board.move_options.map{ |move| qba_get_net(board, move, player) }.max || 0.0
     end
 
     def other_player(player)
