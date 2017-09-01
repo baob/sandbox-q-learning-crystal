@@ -64,6 +64,12 @@ module Policy
 
     def qba_get_net(board, move, player)
       state = state_from_board(board)
+
+      # TODO: This may be mistaken. Either "I" move or "they" do,
+      #       so it doesn't make sense to combine "I" and "they" values.
+      # generalise to N players, move to QSA then write specs.
+      # Maybe the answer is: If "I" have qsa values, take the max of those.
+      #           otherwise: If "they" gave qsa value take the min (or max) of -ve of those
       qsa.get(state, move, player) - qsa.get(state, move, other_player(player))
     end
 
@@ -85,6 +91,9 @@ module Policy
       if board.is_win_for?(player)
         return 1.0
       elsif board.is_win_for?(other_player(player))
+
+        # TODO: Actually we never see the "lose".
+        # Maybe we should look ahead for it here ?
         return -1.0
       elsif board.game_over?
         return 0.0
