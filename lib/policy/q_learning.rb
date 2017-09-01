@@ -29,7 +29,7 @@ module Policy
 
     def choose_exploiting_move(board, player, moves)
       return moves.first if moves.size == 1
-      moves.max { |move1, move2| qsa_get(board, move1, player) <=> qsa_get(board, move2, player) }
+      moves.max { |move1, move2| qsa_get_net(board, move1, player) <=> qsa_get_net(board, move2, player) }
     end
 
     def choose_exploring_move(board, player, moves)
@@ -67,6 +67,10 @@ module Policy
       qsa_set(board, move, player, new_q)
     end
 
+    def qsa_get_net(board, move, player)
+      qsa_get(board, move, player) - qsa_get(board, move, other_player(player))
+    end
+
     def qsa_get(board, move, player)
       state = state_from_board(board)
       @qsa[state] ||= {}
@@ -102,8 +106,7 @@ module Policy
     end
 
     def value(board, player)
-      ( board.move_options.map{ |move| qsa_get(board, move, player) }.max || 0.0 )-
-      ( board.move_options.map{ |move| qsa_get(board, move, other_player(player)) }.max || 0.0 )
+      board.move_options.map{ |move| qsa_get_net(board, move, player) }.max || 0.0
     end
 
     def other_player(player)
