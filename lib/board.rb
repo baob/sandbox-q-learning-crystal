@@ -32,6 +32,20 @@ class Board
     end.any?
   end
 
+  def next_time_is_win_for?(player)
+    next_time_is_game_over? && next_time_could_be_win_for?(player)
+  end
+
+  def next_time_could_be_win_for?(player)
+    move_options.map do |move|
+      apply_move(move, player).is_win_for?(player)
+    end.any?
+  end
+
+  def next_time_is_game_over?
+    move_options.size == 1
+  end
+
   def winner
     return 1 if is_win_for?(1)
     return 2 if is_win_for?(2)

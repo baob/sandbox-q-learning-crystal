@@ -90,13 +90,14 @@ module Policy
     def reward(board, player)
       if board.is_win_for?(player)
         return 1.0
-      elsif board.is_win_for?(other_player(player))
-
-        # TODO: Actually we never see the "lose".
-        # Maybe we should look ahead for it here ?
+      elsif board.next_time_is_win_for?(other_player(player))
         return -1.0
+      elsif board.next_time_could_be_win_for?(other_player(player))
+        return -0.9
       elsif board.game_over?
-        return 0.0
+        return 0.3
+      elsif board.next_time_is_game_over?
+        return 0.3
       else
         return -0.05
       end
