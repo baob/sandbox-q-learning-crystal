@@ -5,12 +5,15 @@ class Qsa
   def initialize
     @qsa = {}
     @stats = Hash.new(0)
+    @adjustments = []
   end
 
   def set(state, move, player, new_q)
+    old_q = get(state, move, player)
     @qsa[state] ||= {}
     @qsa[state][move] ||= {}
     @qsa[state][move][player] = new_q
+    log_adjustment(new_q, old_q)
     increment_sets
   end
 
@@ -31,6 +34,8 @@ class Qsa
       " @stats=\"#{@stats}\""\
       " states.count=\"#{@qsa.values.count}\""\
       " values.count=\"#{values_count}\""\
+      " adjustments.max=\"#{@adjustments.max}\""\
+      " adjustments.mean=\"#{mean_adjustments}\""\
     '>'
   end
 
@@ -43,6 +48,16 @@ class Qsa
       total += v_state_size # accumulating no players in each state
       total
     end
+  end
+
+  def log_adjustment(new_q, old_q)
+    @adjustments.unshift((new_q-old_q).abs)
+    @adjustments = @adjustments[0..99] if @adjustments.size > 100
+  end
+
+  def mean_adjustments
+    @adjustments.compact.reduce(&:+)/@adjustments.compact.size
+
   end
 
   def increment_sets
