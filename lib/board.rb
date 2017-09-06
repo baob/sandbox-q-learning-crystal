@@ -1,4 +1,11 @@
 class Board
+  class << self
+    def from_state(state)
+      board_moves = 9.times.each_with_object([state]) { |n, x| q, r = x.pop.divmod(3) ; x.push(q) ; x.unshift(r) }[0..8]
+      new(board_moves)
+    end
+  end
+
   def initialize(board = nil)
     @board = board || empty_board
   end
