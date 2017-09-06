@@ -39,7 +39,7 @@ class Series
       end
     end
 
-    puts "Stats: #{stats}"
+    puts "Stats: #{stats.sort}"
   end
 
   def evaluation_count
