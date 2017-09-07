@@ -43,6 +43,6 @@ class Series
   end
 
   def evaluation_count
-    1000
+    100
   end
 end
