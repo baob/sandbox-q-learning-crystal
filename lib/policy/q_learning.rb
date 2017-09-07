@@ -93,13 +93,13 @@ module Policy
       elsif board.next_time_is_win_for?(other_player(player))
         return -1.0
       elsif board.next_time_could_be_win_for?(other_player(player))
-        return -0.9
+        return -1.0
       elsif board.game_over?
-        return 0.3
+        return 0.2
       elsif board.next_time_is_game_over?
-        return 0.3
+        return 0.2
       else
-        return -0.05
+        return -0.1
       end
     end
 
