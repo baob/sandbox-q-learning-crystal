@@ -9,7 +9,7 @@ module Policy
 
     def initialize
       @explore_percent = 67
-      @learning_rate = 0.8
+      @learning_rate = 0.5
       @discount = 0.9
       @qsa = Qsa.new
     end
