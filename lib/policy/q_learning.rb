@@ -30,7 +30,7 @@ module Policy
 
     def choose_exploiting_move(board, player, moves)
       return moves.first if moves.size == 1
-      moves.max { |move1, move2| qba_get_net(board, move1, player) <=> qba_get_net(board, move2, player) }
+      moves.max { |move1, move2| total_qsa_get_for_board(board, move1, player) <=> total_qsa_get_for_board(board, move2, player) }
     end
 
     def choose_exploring_move(board, player, moves)
@@ -57,12 +57,12 @@ module Policy
     end
 
     def recalculate_q(board, move, new_board, player)
-      new_q = (1.0 - @learning_rate) * qba_get(board, move, player)  +
+      new_q = (1.0 - @learning_rate) * qsa_get_for_board(board, move, player)  +
               @learning_rate * ( reward(new_board, player) + @discount * value(new_board, player) )
-      qba_set(board, move, player, new_q)
+      qsa_set_for_board(board, move, player, new_q)
     end
 
-    def qba_get_net(board, move, player)
+    def total_qsa_get_for_board(board, move, player)
       state = state_from_board(board)
 
       # TODO: This may be mistaken. Either "I" move or "they" do,
@@ -73,12 +73,12 @@ module Policy
       qsa.get(state, move, player) - qsa.get(state, move, other_player(player))
     end
 
-    def qba_get(board, move, player)
+    def qsa_get_for_board(board, move, player)
       state = state_from_board(board)
       qsa.get(state, move, player)
     end
 
-    def qba_set(board, move, player, new_q)
+    def qsa_set_for_board(board, move, player, new_q)
       state = state_from_board(board)
       qsa.set(state, move, player, new_q)
     end
@@ -104,7 +104,7 @@ module Policy
     end
 
     def value(board, player)
-      board.move_options.map{ |move| qba_get_net(board, move, player) }.max || 0.0
+      board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }.max || 0.0
     end
 
     def other_player(player)
