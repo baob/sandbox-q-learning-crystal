@@ -39,7 +39,7 @@ class Series
       end
     end
 
-    puts "Stats: #{stats.sort}"
+    puts "Stats: #{stats.sort.map{ |x| x.join(': ')}.join(', ')}"
   end
 
   def evaluation_count
