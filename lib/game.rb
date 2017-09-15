@@ -28,14 +28,19 @@ class Game
     @players.detect { |other_player| other_player != player }
   end
 
-  def play
+  def play_best
+    play(best: true)
+  end
+
+  def play(best: false)
     @board ||= Board.new
     player = @players.detect { |p| p.number == 1 }
     tokens = player.token + other_player(player).token
+    play_method = best ? :play_best : :play
 
     loop do
       puts "\nplayer making a move #{player.inspect}" if @trace
-      @board = player.policy.play(@board, player.number)
+      @board = player.policy.send(play_method, @board, player.number)
       puts @board.to_s(tokens) if @trace
       break if @board.game_over?
       player = other_player(player)
