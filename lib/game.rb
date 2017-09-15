@@ -12,10 +12,12 @@ class Game
 
     @players << Player.new(
       policy: player_a_policy,
+      number: [1, 2].sample,
       token:  'X'
     )
     @players << Player.new(
       policy: player_b_policy,
+      number: 3 - @players[0].number,
       token:  'O'
     )
 
@@ -28,9 +30,7 @@ class Game
 
   def play
     @board ||= Board.new
-    player = @players.sample
-    player.number = 1
-    other_player(player).number = 2
+    player = @players.detect { |p| p.number == 1 }
     tokens = player.token + other_player(player).token
 
     loop do
