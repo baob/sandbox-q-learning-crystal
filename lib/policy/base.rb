@@ -16,6 +16,10 @@ module Policy
         board.move_options
       end
 
+      def play_best(*args)
+        play(*args)
+      end
+
     end
   end
 end

@@ -15,17 +15,19 @@ module Policy
     end
 
     def play(board, as_player)
-      moves = self.class.move_options(board)
-
-      if exploring?
-        move = choose_exploring_move(board, as_player, moves)
-      else
-        move = choose_exploiting_move(board, as_player, moves)
+      play_generic(board, as_player) do |moves|
+        if exploring?
+          choose_exploring_move(board, as_player, moves)
+        else
+          choose_exploiting_move(board, as_player, moves)
+        end
       end
+    end
 
-      new_board = board.apply_move(move, as_player)
-      recalculate_q(board, move, new_board, as_player)
-      new_board
+    def play_best(board, as_player)
+      play_generic(board, as_player) do |moves|
+        choose_exploiting_move(board, as_player, moves)
+      end
     end
 
     def choose_exploiting_move(board, player, moves)
@@ -51,6 +53,16 @@ module Policy
     attr_reader :qsa
 
     private
+
+    def play_generic(board, as_player)
+      moves = self.class.move_options(board)
+
+      move = yield moves
+
+      new_board = board.apply_move(move, as_player)
+      recalculate_q(board, move, new_board, as_player)
+      new_board
+    end
 
     def exploring?
       rand(100) < @explore_percent
