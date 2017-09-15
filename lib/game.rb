@@ -6,16 +6,16 @@ Dir[policy_files].each(&method(:require))
 
 class Game
 
-  def initialize(player_1_policy, player_2_policy, trace: true)
+  def initialize(player_a_policy, player_b_policy, trace: true)
 
     @players = []
 
     @players << Player.new(
-      policy: player_1_policy,
+      policy: player_a_policy,
       token:  'X'
     )
     @players << Player.new(
-      policy: player_2_policy,
+      policy: player_b_policy,
       token:  'O'
     )
 
