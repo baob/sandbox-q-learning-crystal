@@ -7,8 +7,6 @@ RSpec.describe Player do
 
     it { is_expected.to respond_to(:policy) }
     it { is_expected.to respond_to(:token) }
-    it { is_expected.to respond_to(:other_player) }
-    it { is_expected.to respond_to(:other_player=) }
     it { is_expected.to respond_to(:number) }
     it { is_expected.to respond_to(:number=) }
   end

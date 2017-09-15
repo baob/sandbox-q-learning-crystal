@@ -19,25 +19,26 @@ class Game
       token:  'O'
     )
 
-    @players[0].other_player = @players[1]
-    @players[1].other_player = @players[0]
-
     @trace = trace
+  end
+
+  def other_player(player)
+    @players.detect { |other_player| other_player != player }
   end
 
   def play
     @board ||= Board.new
     player = @players.sample
     player.number = 1
-    player.other_player.number = 2
-    tokens = player.token + player.other_player.token
+    other_player(player).number = 2
+    tokens = player.token + other_player(player).token
 
     loop do
-      puts "\nplayer making a move #{player}" if @trace
+      puts "\nplayer making a move #{player.inspect}" if @trace
       @board = player.policy.play(@board, player.number)
       puts @board.to_s(tokens) if @trace
       break if @board.game_over?
-      player = player.other_player
+      player = other_player(player)
     end
 
     if w = @board.winner

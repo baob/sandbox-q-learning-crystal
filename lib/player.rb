@@ -1,11 +1,11 @@
 class Player
 
   attr_reader :policy, :token
-  attr_accessor :other_player, :number
+  attr_accessor :number
 
   def initialize(policy:, token:)
-    @policy = policy
     @token  = String(token)
+    @policy = policy
   end
 
 end
