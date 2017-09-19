@@ -20,6 +20,10 @@ class Board
     @board.each_with_index.select { |cell, index| cell == 0 }.map(&:last)
   end
 
+  def ==(other)
+    self.to_state == other.to_state
+  end
+
   # Player here is a number, 1 or # 2 indicating 1st or 2nd
   #
   def apply_move(move, as_player)
@@ -56,6 +60,7 @@ class Board
   end
 
   def winner
+
     return 1 if is_win_for?(1)
     return 2 if is_win_for?(2)
   end
