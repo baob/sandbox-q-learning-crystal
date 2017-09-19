@@ -1,5 +1,7 @@
 class Board
   class << self
+
+    # state is a transformation of each of the boards cells to digits in a base-3 number
     def from_state(state)
       board_moves = 9.times.each_with_object([state]) { |n, x| q, r = x.pop.divmod(3) ; x.push(q) ; x.unshift(r) }[0..8]
       new(board_moves)
@@ -79,6 +81,7 @@ class Board
     end
   end
 
+  # state is a transformation of each of the boards cells to digits in a base-3 number
   def to_state
     @board.reduce(0) do |memo, digit|
       memo = 3 * memo + digit
