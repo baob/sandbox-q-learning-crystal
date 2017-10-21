@@ -1,5 +1,6 @@
 # The Q(s,a) matrix from the maths supporting
 # q-learning
+# extended with an extra dimension to support two players
 #
 class Qsa
   def initialize

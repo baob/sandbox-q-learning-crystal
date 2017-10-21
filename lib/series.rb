@@ -1,7 +1,8 @@
 require 'game'
 
-# Runs a series of games silently, then 1000 more to
-# evaluate effectiveness.
+# Runs a series of games silently, then 100 more
+# at best possible play (versus q-learning exploring)
+# to evaluate effectiveness.
 
 class Series
 

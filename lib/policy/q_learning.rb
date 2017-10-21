@@ -120,7 +120,7 @@ module Policy
     end
 
     def other_player(player)
-      3 - player
+      3 - player # player number is either 1 or 2
     end
 
   end

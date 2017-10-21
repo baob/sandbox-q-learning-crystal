@@ -17,7 +17,7 @@ class Game
     )
     @players << Player.new(
       policy: player_b_policy,
-      number: 3 - @players[0].number,
+      number: 3 - @players[0].number, # player number is 1 or 2
       token:  'O'
     )
 

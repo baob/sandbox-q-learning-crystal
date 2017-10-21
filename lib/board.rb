@@ -1,9 +1,14 @@
 class Board
+
+  NUMBER_OF_CELLS_PER_ROW = 3
+  NUMBER_OF_CELLS_IN_BOARD = NUMBER_OF_CELLS_PER_ROW ** 2
+  ENCODED_STATE_RADIX = 3
+
   class << self
 
     # state is a transformation of each of the boards cells to digits in a base-3 number
     def from_state(state)
-      board_moves = 9.times.each_with_object([state]) { |n, x| q, r = x.pop.divmod(3) ; x.push(q) ; x.unshift(r) }[0..8]
+      board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) { |n, x| q, r = x.pop.divmod(ENCODED_STATE_RADIX) ; x.push(q) ; x.unshift(r) }[0..8]
       new(board_moves)
     end
   end
@@ -82,14 +87,14 @@ class Board
         string << tokens[cell-1]
       end
       count += 1
-      string << "\n" if count % 3 == 0
+      string << "\n" if count % NUMBER_OF_CELLS_PER_ROW == 0
     end
   end
 
   # state is a transformation of each of the boards cells to digits in a base-3 number
   def to_state
     @board.reduce(0) do |memo, digit|
-      memo = 3 * memo + digit
+      memo = ENCODED_STATE_RADIX * memo + digit
       memo
     end
   end
@@ -108,6 +113,6 @@ class Board
   private
 
   def empty_board
-    9.times.map { 0 }
+    NUMBER_OF_CELLS_IN_BOARD.times.map { 0 }
   end
 end
