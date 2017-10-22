@@ -3,13 +3,23 @@ class Board
   NUMBER_OF_CELLS_PER_ROW = 3
   NUMBER_OF_CELLS_IN_BOARD = NUMBER_OF_CELLS_PER_ROW ** 2
   ENCODED_STATE_RADIX = 3
+  CELL_INDEXES = 0..(NUMBER_OF_CELLS_IN_BOARD - 1)
+  EMPTY_CELL = 0
+  PLAYERS = [1,2]
 
   class << self
 
     # state is a transformation of each of the boards cells to digits in a base-3 number
     def from_state(state)
-      board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) { |n, x| q, r = x.pop.divmod(ENCODED_STATE_RADIX) ; x.push(q) ; x.unshift(r) }[0..8]
+      board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) do |n, x|
+        q, r = x.pop.divmod(ENCODED_STATE_RADIX) ; x.push(q) ; x.unshift(r)
+      end[CELL_INDEXES]
+
       new(board_moves)
+    end
+
+    def other_player(player)
+      PLAYERS.reduce(&:+) - player
     end
   end
 
@@ -22,7 +32,7 @@ class Board
   end
 
   def move_options
-    @board.each_with_index.select { |cell, index| cell == 0 }.map(&:last)
+    @board.each_with_index.select { |cell, index| cell == EMPTY_CELL }.map(&:last)
   end
 
   def ==(other)
@@ -32,11 +42,13 @@ class Board
   # Player here is a number, 1 or # 2 indicating 1st or 2nd
   #
   def apply_move(move, as_player)
-    raise RuntimeError if @board[move] != 0
-    raise ArgumentError unless (0..8).to_a.include?(move)
-    raise ArgumentError unless [1, 2].include?(as_player)
+    raise RuntimeError if @board[move] != EMPTY_CELL
+    raise ArgumentError unless CELL_INDEXES.to_a.include?(move)
+    raise ArgumentError unless PLAYERS.include?(as_player)
+
     new_board = @board.dup
     new_board[move] = as_player
+
     self.class.new(new_board)
   end
 
@@ -65,9 +77,8 @@ class Board
   end
 
   def winner
-
-    return 1 if is_win_for?(1)
-    return 2 if is_win_for?(2)
+    PLAYERS.each { |player| return player if is_win_for?(player) }
+    return
   end
 
   def game_over?
@@ -78,10 +89,10 @@ class Board
     move_options.size == 0
   end
 
-  def to_s(tokens = "12")
+  def to_s(tokens = PLAYERS.map(&:to_s).reduce(&:+))
     count = 0
     @board.each_with_object('') do |cell, string|
-      if cell == 0
+      if cell == EMPTY_CELL
         string << '.'
       else
         string << tokens[cell-1]
@@ -113,6 +124,6 @@ class Board
   private
 
   def empty_board
-    NUMBER_OF_CELLS_IN_BOARD.times.map { 0 }
+    NUMBER_OF_CELLS_IN_BOARD.times.map { EMPTY_CELL }
   end
 end

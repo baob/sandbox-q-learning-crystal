@@ -12,12 +12,12 @@ class Game
 
     @players << Player.new(
       policy: player_a_policy,
-      number: [1, 2].sample,
+      number: Board::PLAYERS.sample, # player number is 1 or 2
       token:  'X'
     )
     @players << Player.new(
       policy: player_b_policy,
-      number: 3 - @players[0].number, # player number is 1 or 2
+      number: Board.other_player(@players[0].number), # player number is 1 or 2
       token:  'O'
     )
 
