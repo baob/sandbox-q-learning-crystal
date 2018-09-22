@@ -1,6 +1,6 @@
 require "../../src/board"
 
-RSpec.describe Board do
+describe Board do
   let(:board0) { described_class.new }
   
   context "when empty" do

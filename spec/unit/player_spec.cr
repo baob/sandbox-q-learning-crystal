@@ -1,6 +1,6 @@
 require "../../src/player"
 
-RSpec.describe Player do
+describe Player do
 
   context "initialized" do
     subject { Player.new(policy: :the_policy, token: "X", number: 2) }

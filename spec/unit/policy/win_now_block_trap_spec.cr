@@ -1,7 +1,7 @@
 require "../../../src/policy/win_now_block_trap"
 
 module Policy
-  RSpec.describe WinNowBlockTrap do
+  describe WinNowBlockTrap do
 
     subject { described_class }
 

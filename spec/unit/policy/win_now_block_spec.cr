@@ -1,7 +1,7 @@
 require "../../../src/policy/win_now_block"
 
 module Policy
-  RSpec.describe WinNowBlock do
+  describe WinNowBlock do
 
     subject { described_class }
 

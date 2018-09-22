@@ -1,7 +1,7 @@
 require "../../../src/policy/random"
 
 module Policy
-  RSpec.describe Random do
+  describe Random do
 
     subject { described_class }
 

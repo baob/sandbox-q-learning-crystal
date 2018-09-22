@@ -1,7 +1,7 @@
 require "../../../src/policy/q_learning"
 
 module Policy
-  RSpec.describe QLearning do
+  describe QLearning do
 
     subject { described_class.new }
 
