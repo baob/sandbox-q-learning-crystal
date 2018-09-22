@@ -22,12 +22,10 @@ class Qsa
     ((@qsa[state] || {})[move] || {})[player] || 0.0
   end
 
-  def qsa
-    @qsa
-  end
+  attr_reader :qsa
 
   def qsa_non_trivial
-    @qsa.reject{ |state, svalue| svalue.reject{ |move, mvalue| mvalue.select{ |player, pvalue| pvalue.abs > 0.001 } .empty? }.empty? }
+    @qsa.reject{ |_state, svalue| svalue.reject{ |_move, mvalue| mvalue.select{ |_player, pvalue| pvalue.abs > 0.001 } .empty? }.empty? }
   end
 
   def inspect
@@ -37,12 +35,12 @@ class Qsa
       " values.count=\"#{values_count}\""\
       " adjustments.max=\"#{@adjustments.max}\""\
       " adjustments.mean=\"#{mean_adjustments}\""\
-    '>'
+    ">"
   end
 
   def values_count
-    @qsa.reduce(0) do |total, (k_state, v_state)|
-      v_state_size = v_state.reduce(0) do |total, (k_action, v_action)|
+    @qsa.reduce(0) do |total, (_k_state, v_state)|
+      v_state_size = v_state.reduce(0) do |total, (_k_action, v_action)|
         total += v_action.size # accumulating no players in each action
         total
       end
@@ -52,12 +50,12 @@ class Qsa
   end
 
   def log_adjustment(new_q, old_q)
-    @adjustments.unshift((new_q-old_q).abs)
+    @adjustments.unshift((new_q - old_q).abs)
     @adjustments = @adjustments[0..99] if @adjustments.size > 100
   end
 
   def mean_adjustments
-    @adjustments.compact.reduce(&:+)/@adjustments.compact.size
+    @adjustments.compact.reduce(&:+) / @adjustments.compact.size
 
   end
 

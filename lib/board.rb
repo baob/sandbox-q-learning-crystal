@@ -1,17 +1,17 @@
 class Board
 
   NUMBER_OF_CELLS_PER_ROW = 3
-  NUMBER_OF_CELLS_IN_BOARD = NUMBER_OF_CELLS_PER_ROW ** 2
+  NUMBER_OF_CELLS_IN_BOARD = NUMBER_OF_CELLS_PER_ROW**2
   ENCODED_STATE_RADIX = 3
   CELL_INDEXES = 0..(NUMBER_OF_CELLS_IN_BOARD - 1)
   EMPTY_CELL = 0
-  PLAYERS = [1,2]
+  PLAYERS = [1, 2]
 
   class << self
 
     # state is a transformation of each of the boards cells to digits in a base-3 number
     def from_state(state)
-      board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) do |n, x|
+      board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) do |_n, x|
         q, r = x.pop.divmod(ENCODED_STATE_RADIX) ; x.push(q) ; x.unshift(r)
       end[CELL_INDEXES]
 
@@ -32,11 +32,11 @@ class Board
   end
 
   def move_options
-    @board.each_with_index.select { |cell, index| cell == EMPTY_CELL }.map(&:last)
+    @board.each_with_index.select { |cell, _index| cell == EMPTY_CELL }.map(&:last)
   end
 
   def ==(other)
-    self.to_state == other.to_state
+    to_state == other.to_state
   end
 
   # Player here is a number, 1 or # 2 indicating 1st or 2nd
@@ -78,7 +78,7 @@ class Board
 
   def winner
     PLAYERS.each { |player| return player if is_win_for?(player) }
-    return
+    nil
   end
 
   def game_over?
@@ -91,11 +91,11 @@ class Board
 
   def to_s(tokens = PLAYERS.map(&:to_s).reduce(&:+))
     count = 0
-    @board.each_with_object('') do |cell, string|
+    @board.each_with_object("") do |cell, string|
       if cell == EMPTY_CELL
-        string << '.'
+        string << "."
       else
-        string << tokens[cell-1]
+        string << tokens[cell - 1]
       end
       count += 1
       string << "\n" if count % NUMBER_OF_CELLS_PER_ROW == 0

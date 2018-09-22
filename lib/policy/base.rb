@@ -8,7 +8,7 @@ module Policy
         new_board = board.apply_move(move, as_player)
       end
 
-      def chosen_move(board, player, moves)
+      def chosen_move(_board, _player, _moves)
         raise NotImplementedError # Implement in sub-classes
       end
 

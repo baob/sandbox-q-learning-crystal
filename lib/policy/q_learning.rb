@@ -1,6 +1,6 @@
-require 'board'
-require_relative 'base'
-require 'qsa'
+require "board"
+require_relative "base"
+require "qsa"
 
 module Policy
   class QLearning < Base
@@ -59,7 +59,7 @@ module Policy
       " explore_percent=\"#{@explore_percent}\""\
       " learning_rate=\"#{@learning_rate}\""\
       " discount=\"#{@discount}\""\
-      '>'
+      ">"
     end
 
     attr_reader :qsa
@@ -81,8 +81,8 @@ module Policy
     end
 
     def recalculate_q(board, move, new_board, player)
-      new_q = (1.0 - @learning_rate) * qsa_get_for_board(board, move, player)  +
-              @learning_rate * ( reward(new_board, player) + @discount * value(new_board, player) )
+      new_q = (1.0 - @learning_rate) * qsa_get_for_board(board, move, player) +
+              @learning_rate * (reward(new_board, player) + @discount * value(new_board, player))
       qsa_set_for_board(board, move, player, new_q)
     end
 
@@ -113,17 +113,17 @@ module Policy
 
     def reward(board, player)
       if board.is_win_for?(player)
-        return 1.0
+        1.0
       elsif board.next_time_is_win_for?(other_player(player))
-        return -1.0
+        -1.0
       elsif board.next_time_could_be_win_for?(other_player(player))
-        return -1.0
+        -1.0
       elsif board.game_over?
-        return 0.2
+        0.2
       elsif board.next_time_is_game_over?
-        return 0.2
+        0.2
       else
-        return -0.1
+        -0.1
       end
     end
 

@@ -1,8 +1,8 @@
 SPEC_ROOT = __dir__ unless defined? SPEC_ROOT
-APP_ROOT = File.expand_path('..', SPEC_ROOT) unless defined? APP_ROOT
-LIB_ROOT = File.expand_path('lib', APP_ROOT) unless defined? LIB_ROOT
+APP_ROOT = File.expand_path("..", SPEC_ROOT) unless defined? APP_ROOT
+LIB_ROOT = File.expand_path("lib", APP_ROOT) unless defined? LIB_ROOT
 
-support_spec_files = File.expand_path('support/**/*.rb', __dir__)
+support_spec_files = File.expand_path("support/**/*.rb", __dir__)
 Dir[support_spec_files].each(&method(:require))
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
@@ -23,9 +23,7 @@ RSpec.configure do |config|
   # be too noisy due to issues in dependencies.
   config.warnings = true
 
-  if config.files_to_run.one?
-    config.default_formatter = "doc"
-  end
+  config.default_formatter = "doc" if config.files_to_run.one?
 
   # config.profile_examples = 10
 

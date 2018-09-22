@@ -1,7 +1,7 @@
-require 'board'
-require 'player'
+require "board"
+require "player"
 
-policy_files = File.expand_path('policy/**/*.rb', __dir__)
+policy_files = File.expand_path("policy/**/*.rb", __dir__)
 Dir[policy_files].each(&method(:require))
 
 class Game
@@ -13,12 +13,12 @@ class Game
     @players << Player.new(
       policy: player_a_policy,
       number: Board::PLAYERS.sample, # player number is 1 or 2
-      token:  'X'
+      token:  "X"
     )
     @players << Player.new(
       policy: player_b_policy,
       number: Board.other_player(@players[0].number), # player number is 1 or 2
-      token:  'O'
+      token:  "O"
     )
 
     @trace = trace
@@ -48,7 +48,7 @@ class Game
 
     if w = @board.winner
       player = @players.detect { |p| p.number == w }
-      puts "\n\nplayer #{w} won, #{player}" if @board.is_win_for?(player.number) if @trace
+      puts "\n\nplayer #{w} won, #{player}" if @trace && @board.is_win_for?(player.number)
       return player
     else
       puts "\n\n drawn" if @trace

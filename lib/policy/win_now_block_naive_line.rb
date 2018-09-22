@@ -1,4 +1,4 @@
-require_relative 'win_now_block'
+require_relative "win_now_block"
 
 module Policy
   class WinNowBlockNaiveLine < WinNowBlock

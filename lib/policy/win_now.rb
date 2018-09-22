@@ -1,5 +1,5 @@
-require 'board'
-require 'policy/random'
+require "board"
+require "policy/random"
 
 module Policy
   class WinNow < Random

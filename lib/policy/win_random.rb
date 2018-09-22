@@ -1,5 +1,5 @@
-require 'board'
-require 'policy/win_now_block_trap'
+require "board"
+require "policy/win_now_block_trap"
 
 module Policy
   class WinRandom < Base

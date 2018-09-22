@@ -1,11 +1,11 @@
-require 'policy/random'
+require "policy/random"
 
 module Policy
   RSpec.describe Random do
 
     subject { described_class }
 
-    it_behaves_like 'any policy'
+    it_behaves_like "any policy"
 
   end
 end

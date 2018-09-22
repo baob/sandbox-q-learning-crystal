@@ -1,4 +1,4 @@
-require_relative 'win_now_block_naive_line'
+require_relative "win_now_block_naive_line"
 
 module Policy
   class WinNowBlockTrap < WinNowBlockNaiveLine

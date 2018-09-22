@@ -1,4 +1,4 @@
-require_relative 'win_now'
+require_relative "win_now"
 
 module Policy
   class WinNowBlock < WinNow
