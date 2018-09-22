@@ -64,9 +64,9 @@ module Policy
 
     attr_reader :qsa
 
-    private
+    # private
 
-    def play_generic(board, as_player)
+    private def play_generic(board, as_player)
       moves = self.class.move_options(board)
 
       move = yield moves
@@ -76,17 +76,17 @@ module Policy
       new_board
     end
 
-    def exploring?
+    private def exploring?
       rand(100) < @explore_percent
     end
 
-    def recalculate_q(board, move, new_board, player)
+    private def recalculate_q(board, move, new_board, player)
       new_q = (1.0 - @learning_rate) * qsa_get_for_board(board, move, player) +
               @learning_rate * (reward(new_board, player) + @discount * value(new_board, player))
       qsa_set_for_board(board, move, player, new_q)
     end
 
-    def total_qsa_get_for_board(board, move, player)
+    private def total_qsa_get_for_board(board, move, player)
       state = state_from_board(board)
 
       # TODO: This may be mistaken. Either "I" move or "they" do,
@@ -97,21 +97,21 @@ module Policy
       qsa.get(state, move, player) - qsa.get(state, move, other_player(player))
     end
 
-    def qsa_get_for_board(board, move, player)
+    private def qsa_get_for_board(board, move, player)
       state = state_from_board(board)
       qsa.get(state, move, player)
     end
 
-    def qsa_set_for_board(board, move, player, new_q)
+    private def qsa_set_for_board(board, move, player, new_q)
       state = state_from_board(board)
       qsa.set(state, move, player, new_q)
     end
 
-    def state_from_board(board)
+    private def state_from_board(board)
       board.to_state
     end
 
-    def reward(board, player)
+    private def reward(board, player)
       if board.is_win_for?(player)
         1.0
       elsif board.next_time_is_win_for?(other_player(player))
@@ -127,11 +127,11 @@ module Policy
       end
     end
 
-    def value(board, player)
+    private def value(board, player)
       board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }.max || 0.0
     end
 
-    def other_player(player)
+    private def other_player(player)
       Board.other_player(player) # player number is either 1 or 2
     end
 
