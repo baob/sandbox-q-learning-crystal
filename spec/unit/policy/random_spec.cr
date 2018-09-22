@@ -1,4 +1,4 @@
-require "policy/random"
+require "../../../src/policy/random"
 
 module Policy
   RSpec.describe Random do

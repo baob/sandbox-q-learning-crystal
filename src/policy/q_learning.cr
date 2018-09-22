@@ -1,6 +1,6 @@
-require "board"
-require_relative "base"
-require "qsa"
+require "../board"
+require "./base"
+require "../qsa"
 
 module Policy
   class QLearning < Base

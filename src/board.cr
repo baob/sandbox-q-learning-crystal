@@ -7,10 +7,10 @@ class Board
   EMPTY_CELL = 0
   PLAYERS = [1, 2]
 
-  class << self
+  # class << self
 
     # state is a transformation of each of the boards cells to digits in a base-3 number
-    def from_state(state)
+    def self.from_state(state)
       board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) do |_n, x|
         q, r = x.pop.divmod(ENCODED_STATE_RADIX) ; x.push(q) ; x.unshift(r)
       end[CELL_INDEXES]
@@ -18,12 +18,12 @@ class Board
       new(board_moves)
     end
 
-    def other_player(player)
+    def self.other_player(player)
       PLAYERS.reduce(&:+) - player
     end
-  end
+  # end
 
-  def initialize(board = nil)
+  def initialize(board : ::Nil |Board  = nil )
     @board = board || empty_board
   end
 
@@ -121,9 +121,9 @@ class Board
     [2, 4, 6]
   ]
 
-  private
+  # private
 
-  def empty_board
+  private def empty_board
     NUMBER_OF_CELLS_IN_BOARD.times.map { EMPTY_CELL }
   end
 end

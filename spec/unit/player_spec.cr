@@ -1,4 +1,4 @@
-require "player"
+require "../../src/player"
 
 RSpec.describe Player do
 

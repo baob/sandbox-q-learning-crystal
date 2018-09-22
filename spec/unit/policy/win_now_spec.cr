@@ -1,4 +1,4 @@
-require "policy/win_now"
+require "../../../src/policy/win_now"
 
 module Policy
   RSpec.describe WinNow do

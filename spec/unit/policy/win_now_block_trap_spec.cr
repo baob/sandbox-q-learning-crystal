@@ -1,4 +1,4 @@
-require "policy/win_now_block_trap"
+require "../../../src/policy/win_now_block_trap"
 
 module Policy
   RSpec.describe WinNowBlockTrap do

@@ -1,17 +1,17 @@
-require "board"
-require "policy/win_now_block_trap"
+require "../board"
+require "./win_now_block_trap"
 
 module Policy
   class WinRandom < Base
-    class << self
+    # class << self
 
-      def play(board, player)
+      def self.play(board, player)
         random_win_policy.play(board, player)
       end
 
-      private
+      # private
 
-      def random_win_policy
+      private def self.random_win_policy
         [
           WinNowBlockTrap,
           WinNowBlockTrap,
@@ -25,7 +25,7 @@ module Policy
           WinNow
         ].sample
       end
-    end
+    # end
 
   end
 end

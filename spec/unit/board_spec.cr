@@ -1,8 +1,8 @@
-require "board"
+require "../../src/board"
 
 RSpec.describe Board do
   let(:board0) { described_class.new }
-
+  
   context "when empty" do
     subject { board0 }
 
@@ -79,7 +79,7 @@ RSpec.describe Board do
             specify { expect(subject.to_s).to  eq("2..\n...\n121\n") }
           end
 
-          describe '#to_s(\'OX\')' do
+          describe "#to_s(\'OX\')" do
             specify { expect(subject.to_s("OX")).to eq("X..\n...\nOXO\n") }
           end
 

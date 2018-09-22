@@ -1,4 +1,4 @@
-require "policy/q_learning"
+require "../../../src/policy/q_learning"
 
 module Policy
   RSpec.describe QLearning do

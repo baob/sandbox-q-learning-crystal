@@ -4,22 +4,22 @@
 #
 class Qsa
   def initialize
-    @qsa = {}
-    @stats = Hash.new(0)
-    @adjustments = []
+    @qsa = {} of Int32 => Dictionary
+    @stats = {} of Symbol => Fixnum
+    @adjustments = [] of Int32
   end
 
   def set(state, move, player, new_q)
     old_q = get(state, move, player)
-    @qsa[state] ||= {}
-    @qsa[state][move] ||= {}
+    @qsa[state] ||= {} of Int32 => Dictionary
+    @qsa[state][move] ||= {} of Int32 => Dictionary
     @qsa[state][move][player] = new_q
     log_adjustment(new_q, old_q)
     increment_sets
   end
 
   def get(state, move, player)
-    ((@qsa[state] || {})[move] || {})[player] || 0.0
+    ((@qsa[state] || {} of Int32 => Dictionary)[move] || {} of Int32 => Dictionary)[player] || 0.0
   end
 
   attr_reader :qsa

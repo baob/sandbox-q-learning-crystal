@@ -1,20 +1,20 @@
-require "board"
-require "policy/base"
+require "../board"
+require "./base"
 
 module Policy
   class Random < Base
-    class << self
+    # class << self
 
-      def chosen_move(_board, _player, moves)
+      def self.chosen_move(_board, _player, moves)
         random_move(moves)
       end
 
-      private
+      # private
 
-      def random_move(moves)
+      private def self.random_move(moves)
         moves.sample
       end
-    end
+    # end
 
   end
 end

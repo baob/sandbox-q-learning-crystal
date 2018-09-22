@@ -1,14 +1,14 @@
-require "board"
-require "player"
+require "./board"
+require "./player"
 
 policy_files = File.expand_path("policy/**/*.rb", __dir__)
 Dir[policy_files].each(&method(:require))
 
 class Game
 
-  def initialize(player_a_policy, player_b_policy, trace: true)
+  def initialize(player_a_policy, player_b_policy, trace = true)
 
-    @players = []
+    @players = [] of Player
 
     @players << Player.new(
       policy: player_a_policy,
@@ -32,7 +32,7 @@ class Game
     play(best: true)
   end
 
-  def play(best: false)
+  def play(best = false)
     @board ||= Board.new
     player = @players.detect { |p| p.number == 1 }
     tokens = player.token + other_player(player).token
