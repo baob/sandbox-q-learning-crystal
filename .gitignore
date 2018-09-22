@@ -1,2 +1,7 @@
 .bundle
 README.html
+/docs/
+/lib/
+/bin/
+/.shards/
+*.dwarf

@@ -1,0 +1,13 @@
+name: q-learning-crystal
+version: 0.1.0
+
+authors:
+  - baob <coder@onesandthrees.com>
+
+targets:
+  q-learning-crystal:
+    main: src/q-learning-crystal.cr
+
+crystal: 0.26.1
+
+license: MIT
