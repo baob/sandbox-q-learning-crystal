@@ -7,11 +7,11 @@ describe Board do
     subject { board0 }
 
     describe "#move_options" do
-      specify { expect(subject.move_options).to match_array(0..8) }
+      it { expect(subject.move_options).to match_array(0..8) }
     end
 
     describe "#to_state" do
-      specify { expect(subject.to_state).to eq(0) }
+      it { expect(subject.to_state).to eq(0) }
     end
   end
 
@@ -20,11 +20,11 @@ describe Board do
     subject { board1 }
 
     describe "#move_options" do
-      specify { expect(subject.move_options).to match_array(0..7) }
+      it { expect(subject.move_options).to match_array(0..7) }
     end
 
     describe "#to_state" do
-      specify { expect(subject.to_state).to eq(1) }
+      it { expect(subject.to_state).to eq(1) }
     end
 
     context "after player 2 moves to position 7" do
@@ -32,11 +32,11 @@ describe Board do
       subject { board2 }
 
       describe "#move_options" do
-        specify { expect(subject.move_options).to match_array(0..6) }
+        it { expect(subject.move_options).to match_array(0..6) }
       end
 
       describe "#to_state" do
-        specify { expect(subject.to_state).to eq(7) } # 2*3 + 1
+        it { expect(subject.to_state).to eq(7) } # 2*3 + 1
       end
 
       context "after player 1 moves to position 6" do
@@ -44,11 +44,11 @@ describe Board do
         subject { board3 }
 
         describe "#move_options" do
-          specify { expect(subject.move_options).to match_array(0..5) }
+          it { expect(subject.move_options).to match_array(0..5) }
         end
 
         describe "#to_state" do
-          specify { expect(subject.to_state).to eq(1 * 3**2 + 2 * 3**1 + 1 * 3**0) }
+          it { expect(subject.to_state).to eq(1 * 3**2 + 2 * 3**1 + 1 * 3**0) }
         end
 
         context "after player 2 moves to position 0" do
@@ -56,11 +56,11 @@ describe Board do
           subject { board4 }
 
           describe "#move_options" do
-            specify { expect(subject.move_options).to match_array(1..5) }
+            it { expect(subject.move_options).to match_array(1..5) }
           end
 
           describe "#to_state" do
-            specify { expect(subject.to_state).to eq(2 * 3**8 + 1 * 3**2 + 2 * 3**1 + 1 * 3**0) }
+            it { expect(subject.to_state).to eq(2 * 3**8 + 1 * 3**2 + 2 * 3**1 + 1 * 3**0) }
           end
 
           it "board is equal to another board created from #to_state" do
@@ -72,15 +72,15 @@ describe Board do
           end
 
           describe "#to_a" do
-            specify { expect(subject.to_a).to match([2, 0, 0, 0, 0, 0, 1, 2, 1]) }
+            it { expect(subject.to_a).to match([2, 0, 0, 0, 0, 0, 1, 2, 1]) }
           end
 
           describe "#to_s" do
-            specify { expect(subject.to_s).to  eq("2..\n...\n121\n") }
+            it { expect(subject.to_s).to  eq("2..\n...\n121\n") }
           end
 
           describe "#to_s(\'OX\')" do
-            specify { expect(subject.to_s("OX")).to eq("X..\n...\nOXO\n") }
+            it { expect(subject.to_s("OX")).to eq("X..\n...\nOXO\n") }
           end
 
         end
