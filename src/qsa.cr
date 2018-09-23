@@ -4,22 +4,25 @@
 #
 class Qsa
   def initialize
-    @qsa = {} of Int32 => Dictionary
-    @stats = {} of Symbol => Fixnum
+    @qsa = QsaNextDeepest.new
+    @stats = {} of Symbol => Float32
     @adjustments = [] of Int32
   end
 
+  alias QsaDeepest = Int32[19683]
+  alias QsaNextDeepest = Hash(Int32, QsaDeepest) 
+
   def set(state, move, player, new_q)
     old_q = get(state, move, player)
-    @qsa[state] ||= {} of Int32 => Dictionary
-    @qsa[state][move] ||= {} of Int32 => Dictionary
+    @qsa[state] ||= QsaNextDeepest.new
+    @qsa[state][move] ||= QsaDeepest.new
     @qsa[state][move][player] = new_q
     log_adjustment(new_q, old_q)
     increment_sets
   end
 
   def get(state, move, player)
-    ((@qsa[state] || {} of Int32 => Dictionary)[move] || {} of Int32 => Dictionary)[player] || 0.0
+    ((@qsa[state]? || {} of Int32 => QsaDeepest)[move]? || QsaDeepest.new)[player] ||= 0.0
   end
 
   getter :qsa

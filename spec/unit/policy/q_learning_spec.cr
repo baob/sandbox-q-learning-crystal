@@ -1,11 +1,18 @@
+require "../../spec_helper"
 require "../../../src/policy/q_learning"
 
-module Policy
-  describe QLearning do
+def policy
+  Policy::QLearning.new
+end
 
-    subject { described_class.new }
+# it_behaves_like_any_policy(policy)
+# module Policy
+  describe Policy::QLearning do
 
-    it_behaves_like "any policy"
+    # subject { described_class.new }
+
+    # it_behaves_like "any policy"
+    it_behaves_like_any_policy(policy)
 
   end
-end
+# end

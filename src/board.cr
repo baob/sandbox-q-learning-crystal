@@ -94,7 +94,7 @@ class Board
 
   def to_s(tokens = PLAYERS.map{ |p| p.to_s }.reduce{ |p1, p2| p1 + p2 })
     count = 0
-    String.build do |str|
+      String.build do |str|
       @board.each_with_object(str) do |cell, string|
         if cell == EMPTY_CELL
           string << '.'
