@@ -1,7 +1,7 @@
 require "./policy/base"
 class Player
 
-  property :policy, :token, :number
+  getter :policy, :token, :number
 
   @token : String
   @number : Int32

@@ -5,7 +5,7 @@ require "../qsa"
 module Policy
   class QLearning < Base
 
-    attr_accessor :explore_percent, :learning_rate, :discount
+    property :explore_percent, :learning_rate, :discount
 
     def initialize
 
@@ -62,7 +62,7 @@ module Policy
       ">"
     end
 
-    attr_reader :qsa
+    getter :qsa
 
     # private
 

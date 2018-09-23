@@ -22,7 +22,7 @@ class Qsa
     ((@qsa[state] || {} of Int32 => Dictionary)[move] || {} of Int32 => Dictionary)[player] || 0.0
   end
 
-  attr_reader :qsa
+  getter :qsa
 
   def qsa_non_trivial
     @qsa.reject{ |_state, svalue| svalue.reject{ |_move, mvalue| mvalue.select{ |_player, pvalue| pvalue.abs > 0.001 } .empty? }.empty? }

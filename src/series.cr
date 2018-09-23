@@ -6,7 +6,7 @@ require "./game"
 
 class Series
 
-  attr_reader :player_a_policy, :player_b_policy, :repeats, :trace, :stats
+  getter :player_a_policy, :player_b_policy, :repeats, :trace, :stats
 
   def initialize(player_a_policy, player_b_policy, repeats, trace = false)
     @player_a_policy = player_a_policy
