@@ -80,6 +80,7 @@ class Qsa
   end
 
   def increment_sets
+    @stats[:sets] ||= 0
     @stats[:sets] += 1
   end
 
