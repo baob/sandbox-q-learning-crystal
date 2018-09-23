@@ -3,26 +3,43 @@
 # extended with an extra dimension to support two players
 #
 class Qsa
-  def initialize
-    @qsa = QsaNextDeepest.new
-    @stats = {} of Symbol => Float32
-    @adjustments = [] of Int32
-  end
 
-  alias QsaDeepest = Int32[19683]
-  alias QsaNextDeepest = Hash(Int32, QsaDeepest) 
+  alias QsaValue = Float32
+  alias QsaValuesIndexedByPlayer = Hash(Int32, QsaValue) 
+  alias QsaValuesIndexedByMoveAndPlayer = Hash(Int32, QsaValuesIndexedByPlayer) 
+  alias QsaValuesIndexedByStateMoveAndPlayer = Hash(Int32, QsaValuesIndexedByMoveAndPlayer) 
+  @qsa :  QsaValuesIndexedByStateMoveAndPlayer
+  # @adjustments : Array(Float32)
+
+  def initialize
+    @qsa =  QsaValuesIndexedByStateMoveAndPlayer.new
+    @stats = {} of Symbol => Float32
+    @adjustments = [] of Float64
+  end
 
   def set(state, move, player, new_q)
     old_q = get(state, move, player)
-    @qsa[state] ||= QsaNextDeepest.new
-    @qsa[state][move] ||= QsaDeepest.new
-    @qsa[state][move][player] = new_q
+    @qsa[state] ||= QsaValuesIndexedByMoveAndPlayer.new
+    @qsa[state][move] ||= QsaValuesIndexedByPlayer.new
+    @qsa[state][move][player] = new_q.to_f32
     log_adjustment(new_q, old_q)
     increment_sets
   end
 
-  def get(state, move, player)
-    ((@qsa[state]? || {} of Int32 => QsaDeepest)[move]? || QsaDeepest.new)[player] ||= 0.0
+  def get(state, move, player) : QsaValue
+    get_qsa_value_indexed_by_player(state, move, player)
+  end
+
+  def get_qsa_value_indexed_by_player(state, move, player) : QsaValue
+    safe_get_move(state, move)[player] ||= 0.0
+  end
+
+  def safe_get_move(state, move) : QsaValuesIndexedByPlayer
+    safe_get_state(state)[move] ||= QsaValuesIndexedByPlayer.new
+  end
+
+  def safe_get_state(state) : QsaValuesIndexedByMoveAndPlayer
+    @qsa[state] ||= QsaValuesIndexedByMoveAndPlayer.new
   end
 
   getter :qsa

@@ -86,7 +86,7 @@ module Policy
       qsa_set_for_board(board, move, player, new_q)
     end
 
-    private def total_qsa_get_for_board(board, move, player)
+    private def total_qsa_get_for_board(board, move, player) : Float32
       state = state_from_board(board)
 
       # TODO: This may be mistaken. Either "I" move or "they" do,

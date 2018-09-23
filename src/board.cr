@@ -22,7 +22,7 @@ class Board
   end
 
   def self.other_player(player)
-    PLAYERS.reduce(&:+) - player
+    PLAYERS.reduce{|memo, value| memo + value} - player
   end
   # end
 
