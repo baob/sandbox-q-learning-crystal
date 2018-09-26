@@ -36,10 +36,12 @@ class Game
   end
 
   def play(best = false)
-    player : Player = @players.find { |p| p.number == 1 }
-    raise Exception.new if player.nil?
-    the_other : Player = other_player(player)
-    raise Exception.new if the_other.nil?
+    p = @players.find { |p| p.number == 1 }
+    p.nil? ? raise Exception.new : (player = p) 
+
+    p = other_player(player)
+    p.nil? ? raise Exception.new : (the_other = p)
+
     tokens = player.token + the_other.token
     play_method = best ? :play_best : :play
 
@@ -52,7 +54,8 @@ class Game
       end
       puts @board.to_s(tokens) if @trace
       break if @board.game_over?
-      player = other_player(player)
+      player_next = other_player(player)
+      player = player_next
     end
 
     if w = @board.winner
