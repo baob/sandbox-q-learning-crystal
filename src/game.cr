@@ -26,7 +26,7 @@ class Game
   end
 
   def other_player(player)
-    @players.detect { |other_player| other_player != player }
+    @players.find { |other_player| other_player != player }
   end
 
   def play_best
@@ -35,8 +35,11 @@ class Game
 
   def play(best = false)
     @board ||= Board.new
-    player = @players.detect { |p| p.number == 1 }
-    tokens = player.token + other_player(player).token
+    player = @players.find { |p| p.number == 1 }
+    raise Exception.new if player.nil?
+    the_other = other_player(player)
+    raise Exception.new if the_other.nil?
+    tokens = player.token + the_other.token
     play_method = best ? :play_best : :play
 
     loop do
@@ -48,7 +51,7 @@ class Game
     end
 
     if w = @board.winner
-      player = @players.detect { |p| p.number == w }
+      player = @players.find { |p| p.number == w }
       puts "\n\nplayer #{w} won, #{player}" if @trace && @board.is_win_for?(player.number)
       return player
     else
