@@ -12,7 +12,8 @@ module Policy
       # private
 
       private def self.winning_move(board, player, moves)
-        winning_moves_for(board, player, moves).sample
+        moves = winning_moves_for(board, player, moves)
+        moves.empty? ? nil : moves.sample
       end
 
       private def self.winning_moves_for(board, player, moves)

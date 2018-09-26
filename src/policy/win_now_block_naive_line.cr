@@ -13,7 +13,8 @@ module Policy
       end
 
       def self.naive_line_move(board, player, moves)
-        naive_line_moves(board, player, moves).sample
+        moves = naive_line_moves(board, player, moves)
+        moves.empty? ? nil : moves.sample
       end
 
       # Choose lines that might be a winner next move
