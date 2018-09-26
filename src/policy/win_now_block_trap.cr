@@ -14,7 +14,8 @@ module Policy
       end
 
       def self.trap_move(board, player, moves)
-        trap_moves(board, player, moves).sample
+        moves = trap_moves(board, player, moves)
+        moves.empty? ? nil : moves.sample
       end
 
       # Choose lines that offer 2 winning moves next time
