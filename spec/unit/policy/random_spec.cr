@@ -2,7 +2,7 @@ require "../../spec_helper"
 require "../../../src/policy/random"
 
 def policy
-  Policy::Random
+  Policy::Random.policy
 end
 
 module Policy

@@ -2,7 +2,7 @@ require "../../spec_helper"
 require "../../../src/policy/win_now_block_trap"
 
 def policy
-  Policy::WinNowBlockTrap
+  Policy::WinNowBlockTrap.policy
 end
 
 module Policy

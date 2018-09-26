@@ -3,6 +3,11 @@ require "./win_now_block_trap"
 
 module Policy
   class WinRandom < Base
+
+    def self.policy
+      self
+    end
+
     # class << self
 
       def self.play(board, player)

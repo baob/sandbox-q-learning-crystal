@@ -1,12 +1,12 @@
 require "../../spec_helper"
-require "../../../src/policy/win_now_block"
+require "../../../src/policy/win_random"
 
 def policy
-  Policy::WinNowBlock.policy
+  Policy::WinRandom.policy
 end
 
 module Policy
-  describe WinNowBlock do
+  describe WinRandom do
 
     # subject { described_class }
 

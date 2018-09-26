@@ -3,7 +3,10 @@ require "./base"
 
 module Policy
   class Random < Base
-    # class << self
+    def self.policy
+      self
+    end
+        # class << self
 
     def self.chosen_move(_board, _player, moves)
       random_move(moves)

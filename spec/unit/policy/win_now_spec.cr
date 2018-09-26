@@ -1,7 +1,7 @@
 require "../../../src/policy/win_now"
 
 def policy
-  Policy::WinNow
+  Policy::WinNow.policy
 end
 module Policy
   describe WinNow do

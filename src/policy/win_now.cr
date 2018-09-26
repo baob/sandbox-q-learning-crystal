@@ -3,6 +3,11 @@ require "./random"
 
 module Policy
   class WinNow < Random
+
+    def self.policy
+      self
+    end
+    
     # class << self
 
       def self.chosen_move(board, player, moves)

@@ -5,6 +5,11 @@ require "../qsa"
 module Policy
   class QLearning < Base
 
+    def self.policy
+      new
+    end
+    
+
     property :explore_percent, :learning_rate, :discount
 
     def initialize

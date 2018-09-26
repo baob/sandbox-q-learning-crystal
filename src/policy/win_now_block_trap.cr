@@ -3,6 +3,10 @@ require "./win_now_block_naive_line"
 module Policy
   class WinNowBlockTrap < WinNowBlockNaiveLine
 
+    def self.policy
+      self
+    end
+    
     # class << self
 
       def self.chosen_move(board, player, moves)

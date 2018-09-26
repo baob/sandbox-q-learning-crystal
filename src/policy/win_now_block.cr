@@ -3,6 +3,11 @@ require "./win_now"
 module Policy
   class WinNowBlock < WinNow
 
+    def self.policy
+      self
+    end
+    
+
     # class << self
 
       def self.chosen_move(board, player, moves)

@@ -2,7 +2,7 @@ require "../../spec_helper"
 require "../../../src/policy/q_learning"
 
 def policy
-  Policy::QLearning.new
+  Policy::QLearning.policy
 end
 
 # it_behaves_like_any_policy(policy)

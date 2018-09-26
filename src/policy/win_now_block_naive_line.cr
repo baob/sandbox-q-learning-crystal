@@ -2,7 +2,10 @@ require "./win_now_block"
 
 module Policy
   class WinNowBlockNaiveLine < WinNowBlock
-
+    def self.policy
+      self
+    end
+    
     # class << self
 
       def self.chosen_move(board, player, moves)
