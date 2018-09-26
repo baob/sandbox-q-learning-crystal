@@ -23,6 +23,8 @@ class Game
     )
 
     @trace = trace
+
+    @board = Board.new
   end
 
   def other_player(player)
@@ -34,17 +36,20 @@ class Game
   end
 
   def play(best = false)
-    @board ||= Board.new
-    player = @players.find { |p| p.number == 1 }
+    player : Player = @players.find { |p| p.number == 1 }
     raise Exception.new if player.nil?
-    the_other = other_player(player)
+    the_other : Player = other_player(player)
     raise Exception.new if the_other.nil?
     tokens = player.token + the_other.token
     play_method = best ? :play_best : :play
 
     loop do
       puts "\nplayer making a move #{player.inspect}" if @trace
-      @board = player.policy.send(play_method, @board, player.number)
+      @board = if best
+        player.policy.play_best(@board, player.number)
+      else
+        player.policy.play(@board, player.number)
+      end
       puts @board.to_s(tokens) if @trace
       break if @board.game_over?
       player = other_player(player)

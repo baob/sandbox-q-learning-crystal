@@ -72,7 +72,7 @@ module Policy
     # private
 
     private def play_generic(board, as_player)
-      moves = self.class.move_options(board)
+      moves = move_options(board)
 
       move = yield moves
 

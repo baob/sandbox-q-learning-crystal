@@ -9,7 +9,7 @@ module Policy
       end
 
       def chosen_move(_board, _player, _moves)
-        raise NotImplementedError # Implement in sub-classes
+        raise Exception.new("NotImplementedError") # Implement in sub-classes
       end
 
       def move_options(board)
