@@ -5,23 +5,23 @@ module Policy
   class WinNow < Random
 
     def self.policy
-      self
+      new
     end
     
     # class << self
 
-      def self.chosen_move(board, player, moves)
+      def chosen_move(board, player, moves)
         winning_move(board, player, moves) || random_move(moves)
       end
 
       # private
 
-      private def self.winning_move(board, player, moves)
+      private def winning_move(board, player, moves)
         moves = winning_moves_for(board, player, moves)
         moves.empty? ? nil : moves.sample
       end
 
-      private def self.winning_moves_for(board, player, moves)
+      private def winning_moves_for(board, player, moves)
         moves.select do |move|
           board.apply_move(move, player).is_win_for?(player)
         end

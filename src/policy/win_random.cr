@@ -5,29 +5,29 @@ module Policy
   class WinRandom < Base
 
     def self.policy
-      self
+      new
     end
 
     # class << self
 
-      def self.play(board, player)
+      def play(board, player)
         random_win_policy.play(board, player)
       end
 
       # private
 
-      private def self.random_win_policy
+      private def random_win_policy
         [
-          WinNowBlockTrap,
-          WinNowBlockTrap,
-          WinNowBlockTrap,
-          WinNowBlockTrap,
-          WinNowBlockNaiveLine,
-          WinNowBlockNaiveLine,
-          WinNowBlockNaiveLine,
-          WinNowBlock,
-          WinNowBlock,
-          WinNow
+          WinNowBlockTrap.policy,
+          WinNowBlockTrap.policy,
+          WinNowBlockTrap.policy,
+          WinNowBlockTrap.policy,
+          WinNowBlockNaiveLine.policy,
+          WinNowBlockNaiveLine.policy,
+          WinNowBlockNaiveLine.policy,
+          WinNowBlock.policy,
+          WinNowBlock.policy,
+          WinNow.policy
         ].sample
       end
     # end
