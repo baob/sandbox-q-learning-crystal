@@ -4,7 +4,10 @@ require "./game"
 # at best possible play (versus q-learning exploring)
 # to evaluate effectiveness.
 
+
 class Series
+
+  @stats : Hash(Symbol,Float32)
 
   getter :player_a_policy, :player_b_policy, :repeats, :trace, :stats
 
@@ -33,7 +36,8 @@ class Series
       end
     end
 
-    puts "Stats: #{stats.sort.map{ |x| x.join(\": \")}.join(\", \")}"
+    stats_print = stats.sort.map{ |x| x.join(": ")}.join(", ")
+    puts "Stats: #{stats_print}"
   end
 
   def evaluation_count

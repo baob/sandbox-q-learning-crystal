@@ -1,8 +1,9 @@
 require "./board"
 require "./player"
+require "./policy/*"
 
-policy_files = File.expand_path("policy/**/*.rb", __dir__)
-Dir[policy_files].each(&method(:require))
+# policy_files = File.expand_path("policy/**/*.rb", __dir__)
+# Dir[policy_files].each(&method(:require))
 
 class Game
 
