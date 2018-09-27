@@ -7,18 +7,18 @@ require "./policy/*"
 
 class Game
 
-  def initialize(player_a_policy, player_b_policy, trace = true)
+  def initialize(player_a_policy : Policy::Base, player_b_policy : Policy::Base, trace = true)
 
     @players = [] of Player
 
     @players << Player.new(
       policy: player_a_policy,
-      number: Board::PLAYERS.sample, # player number is 1 or 2
+      number: 1, # player number is 1 or 2
       token:  "X"
     )
     @players << Player.new(
       policy: player_b_policy,
-      number: Board.other_player(@players[0].number), # player number is 1 or 2
+      number: 2, # player number is 1 or 2
       token:  "O"
     )
 
@@ -36,15 +36,18 @@ class Game
   end
 
   def play(best = false)
-    p = @players.find { |p| p.number == 1 }
-    p.nil? ? raise Exception.new : (player = p) 
 
-    p = other_player(player)
-    p.nil? ? raise Exception.new : (the_other = p)
+    if [true, false].sample
+      playloop(@players[0], @players[1], best)
+    else
+      playloop(@players[1], @players[0], best)
+    end
 
+  end
+
+  private def playloop(player : Player, the_other : Player, best)
     tokens = player.token + the_other.token
-    play_method = best ? :play_best : :play
-
+    
     loop do
       puts "\nplayer making a move #{player.inspect}" if @trace
       @board = if best
@@ -54,12 +57,14 @@ class Game
       end
       puts @board.to_s(tokens) if @trace
       break if @board.game_over?
-      player_next = other_player(player)
+      player_next = the_other
+      the_other_next = player
       player = player_next
+      the_other = the_other_next
     end
 
     if w = @board.winner
-      player = @players.find { |p| p.number == w }
+      player = @players[w-1]
       puts "\n\nplayer #{w} won, #{player}" if @trace && @board.is_win_for?(player.number)
       return player
     else
@@ -67,5 +72,4 @@ class Game
       return
     end
   end
-
 end

@@ -51,7 +51,7 @@ class Qsa
   def inspect
     "<Qsa:0x#{object_id.to_s(16)}"\
       " @stats=\"#{@stats}\""\
-      " states.count=\"#{@qsa.values.count}\""\
+      " states.count=\"#{@qsa.values.size}\""\
       " values.count=\"#{values_count}\""\
       " adjustments.max=\"#{@adjustments.max}\""\
       " adjustments.mean=\"#{mean_adjustments}\""\
@@ -75,7 +75,7 @@ class Qsa
   end
 
   def mean_adjustments
-    @adjustments.compact.reduce(&:+) / @adjustments.compact.size
+    @adjustments.compact.reduce(&.+) / @adjustments.compact.size
 
   end
 

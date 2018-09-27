@@ -133,7 +133,12 @@ module Policy
     end
 
     private def value(board, player)
-      board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }.max || 0.0
+      qsa_get_for_options = board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }
+      if qsa_get_for_options.empty?
+        0.0
+      else
+        qsa_get_for_options.max
+      end
     end
 
     private def other_player(player)
