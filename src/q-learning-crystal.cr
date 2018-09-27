@@ -36,6 +36,6 @@ module Q::Learning::Crystal
   puts ql.qsa.inspect
 
   puts  "\nql.qsa.qsa[0] shows a preference (higher Q) for opening with a corner play (moves 0, 2, 6 and 8) ?"
-  puts ql.qsa.qsa[0]
+  puts ql.qsa.qsa_non_trivial[0]
 
 end

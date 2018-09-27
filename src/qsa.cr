@@ -51,7 +51,7 @@ class Qsa
   def inspect
     "<Qsa:0x#{object_id.to_s(16)}"\
       " @stats=\"#{@stats}\""\
-      " states.count=\"#{@qsa.values.size}\""\
+      " states.count=\"#{qsa_non_trivial.values.size}\""\
       " values.count=\"#{values_count}\""\
       " adjustments.max=\"#{@adjustments.max}\""\
       " adjustments.mean=\"#{mean_adjustments}\""\
@@ -59,7 +59,7 @@ class Qsa
   end
 
   def values_count
-    @qsa.reduce(0) do |total, (_k_state, v_state)|
+    qsa_non_trivial.reduce(0) do |total, (_k_state, v_state)|
       v_state_size = v_state.reduce(0) do |total, (_k_action, v_action)|
         total += v_action.size # accumulating no players in each action
         total
