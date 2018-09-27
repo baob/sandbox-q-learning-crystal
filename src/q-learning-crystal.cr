@@ -11,8 +11,11 @@ module Q::Learning::Crystal
 
 
   ql = Policy::QLearning.policy # set up our untrained q-learning 'policy'
+  ql.learning_rate = 0.5
+  ql.discount = 0.5
+  ql.explore_percent = 90
   Game.new(ql, Policy::WinRandom.policy, trace: true).play  # to see one game (q-learning versus good-but-a-bit-random)
-  Series.new(ql, Policy::WinRandom.policy, 500).play  # to run a training series
+  Series.new(ql, Policy::WinRandom.policy, 5000).play  # to run a training series
 
   # Indicators of training success:
 
