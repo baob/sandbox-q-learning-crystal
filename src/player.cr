@@ -14,4 +14,13 @@ class Player
     @policy = policy
   end
 
+  def inspect
+    "<Player:0x#{object_id.to_s(16)}"\
+      " @token=\"#{@token}\""\
+      " @number=\"#{@number}\""\
+      " @policy.class=\"#{@policy.class}\""\
+      ">"
+  end
+
+
 end
