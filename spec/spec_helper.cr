@@ -1,7 +1,6 @@
 require "spec"
 # require "minitest/autorun"
 
-require "../src/q-learning-crystal"
 def board
     Board.new
 end
