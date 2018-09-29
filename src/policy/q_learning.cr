@@ -90,16 +90,19 @@ module Policy
       puts qsa.inspect
 
       puts  "\nqsa.qsa[0] shows a preference (higher Q) for opening with a corner play (moves 0, 2, 6 and 8) ?"
+      puts "Corners:"
       puts "qsa.qsa[0][0] #{qsa.qsa[0][0]}"
       puts "qsa.qsa[0][2] #{qsa.qsa[0][2]}"
       puts "qsa.qsa[0][6] #{qsa.qsa[0][6]}"
       puts "qsa.qsa[0][8] #{qsa.qsa[0][8]}"
-      puts "..."
+      puts "Edges:"
       puts "qsa.qsa[0][1] #{qsa.qsa[0][1]}"
       puts "qsa.qsa[0][3] #{qsa.qsa[0][3]}"
-      puts "qsa.qsa[0][4] #{qsa.qsa[0][4]}"
       puts "qsa.qsa[0][5] #{qsa.qsa[0][5]}"
       puts "qsa.qsa[0][7] #{qsa.qsa[0][7]}"
+      puts "Centre:"
+      puts "qsa.qsa[0][4] #{qsa.qsa[0][4]}"
+      puts "\n"
     end
 
     # private

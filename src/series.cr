@@ -13,7 +13,6 @@ class Series
   @repeats : Int32
 
 
-
   getter :player_a_policy, :player_b_policy, :repeats, :trace, :stats
 
   def initialize(player_a_policy, player_b_policy, repeats, trace = false)
@@ -22,6 +21,12 @@ class Series
     @repeats = repeats
     @trace = trace
     @stats = {} of Symbol => Float32
+
+    @stats[:draws] = 0
+    @stats[:player_a] = 0
+    @stats[:player_b] = 0
+    @stats[:player_a_started] = 0
+    @stats[:player_b_started] = 0
   end
 
   def play
@@ -31,30 +36,23 @@ class Series
 
       player = Game.new(player_a_policy, player_b_policy, trace: trace).play_best
       if player.nil?
-        stats[:draws] ||= 0
         stats[:draws] += 1
       else
         if player.policy == player_a_policy
-          stats[:player_a] ||= 0
           stats[:player_a] += 1
 
           if player.number == 1
-            stats[:player_a_started] ||= 0
             stats[:player_a_started] += 1
           else
-            stats[:player_b_started] ||= 0
             stats[:player_b_started] += 1
           end
 
         else
-          stats[:player_b] ||= 0
           stats[:player_b] += 1
 
           if player.number == 1
-            stats[:player_b_started] ||= 0
             stats[:player_b_started] += 1
           else
-            stats[:player_a_started] ||= 0
             stats[:player_a_started] += 1
           end
 
@@ -63,6 +61,7 @@ class Series
     end
 
     stats_print = stats.map{ |x| x.join(": ")}.join(", ")
+    puts "\nEND OF SERIES:"
     puts "Stats: #{stats_print}"
   end
 
