@@ -189,7 +189,7 @@ module Policy
       elsif board.next_time_is_game_over?
         0.2
       else
-        -0.1
+        0.1
       end
     end
 
