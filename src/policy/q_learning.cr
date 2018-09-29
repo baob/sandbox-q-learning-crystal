@@ -50,19 +50,42 @@ module Policy
 
     def choose_exploiting_move(board, player, moves)
       puts "\nExploit move:" if @trace
-      return moves.first if moves.size == 1
+      if moves.size == 1
+        move = moves.first
+      else 
+        exploiting_moves = choose_exploiting_moves(board, player, moves)
+        move = exploiting_moves.sample
+      end
+      if @trace
+        puts "possible moves #{moves}"
+        puts "exploiting moves #{exploiting_moves}"
+        puts "Exploiting move #{move}"
+      end
+      move
+    end
+
+    def choose_exploiting_moves(board, player, moves)
+      puts "\nExploiting moves:" if @trace
+      return [moves.first] if moves.size == 1
       if @trace
         puts "START ordering by qsa get (to choose Exploit move)"
       end
-      moves_ordered_by_total_qsa_get = moves.sort { |move1, move2| total_qsa_get_for_board(board, move1, player, trace: false) <=> total_qsa_get_for_board(board, move2, player, trace: false) }
+      qsa_values_by_move = moves.reduce({} of Int32 => Float32) do |memo, move|
+        memo[move] = total_qsa_get_for_board(board, move, player, trace: @trace)
+        memo
+      end
+      puts "qsa_values_by_move: #{qsa_values_by_move}" if @trace
+      moves_ordered_by_total_qsa_get = moves.sort { |move1, move2| qsa_values_by_move[move1] <=> qsa_values_by_move[move2] }
       move = moves_ordered_by_total_qsa_get.last
+      qsa = qsa_values_by_move[move]
+      exploiting_moves = moves.select { |m| (qsa_values_by_move[m] - qsa).abs < 0.000001 }
       if @trace
         puts "possible moves #{moves}"
         puts "moves_ordered_by_total_qsa_get #{moves_ordered_by_total_qsa_get}"
         puts "END ordering by qsa get (to choose Exploit move)"
-        puts "Exploiting move #{move}"
+        puts "Exploiting moves #{exploiting_moves}"
       end
-      move
+      exploiting_moves
     end
 
     def choose_exploring_move(board, player, moves)
@@ -74,9 +97,16 @@ module Policy
       if moves.size == 1
         move = moves.first
       else
-        exploring_moves = moves.dup
-        exploring_moves.delete(choose_exploiting_move(board, player, moves))
-        move = exploring_moves.sample
+        exploring_moves = moves - choose_exploiting_moves(board, player, moves)
+        if exploring_moves.empty?
+          move = moves.sample
+        else
+          if exploring_moves.size == 1
+            move = exploring_moves.first
+          else
+            move = exploring_moves.sample
+          end
+        end
         if @trace
           puts "exploring moves #{exploring_moves}"
         end
