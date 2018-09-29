@@ -67,7 +67,7 @@ class Game
 
     if w = @board.winner
       player = @players[w-1]
-      puts "\n\nplayer #{w} won, #{player}" if @trace && @board.is_win_for?(player.number)
+      puts "\n\nplayer #{w} won, #{player.inspect}" if @trace && @board.is_win_for?(player.number)
       return player
     else
       puts "\n\n drawn" if @trace
