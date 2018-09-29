@@ -37,9 +37,27 @@ class Series
         if player.policy == player_a_policy
           stats[:player_a] ||= 0
           stats[:player_a] += 1
+
+          if player.number == 1
+            stats[:player_a_started] ||= 0
+            stats[:player_a_started] += 1
+          else
+            stats[:player_b_started] ||= 0
+            stats[:player_b_started] += 1
+          end
+
         else
           stats[:player_b] ||= 0
           stats[:player_b] += 1
+
+          if player.number == 1
+            stats[:player_b_started] ||= 0
+            stats[:player_b_started] += 1
+          else
+            stats[:player_a_started] ||= 0
+            stats[:player_a_started] += 1
+          end
+
         end
       end
     end
