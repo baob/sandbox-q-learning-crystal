@@ -231,13 +231,11 @@ module Policy
       # generalise to N players, move to QSA then write specs.
       # Maybe the answer is: If "I" have qsa values, take the max of those.
       #           otherwise: If "they" gave qsa value take the min (or max) of -ve of those
-      value_to_player       = qsa.get(state, move, player)
-      value_to_other_player = qsa.get(state, move, other_player(player))
-      total = value_to_player - value_to_other_player
+      value_to_player       = qsa.get(state, move)
+      total = value_to_player
       if trace
         puts "\ntotal_qsa_get for possible move #{move} on board #{board_as_array(board)}"
         puts "qsa value_to player #{player}: #{value_to_player}"
-        puts "qsa value_to player #{other_player(player)}: #{value_to_other_player}"
         puts "net value to player #{player}: #{total}"
       end
       total
@@ -245,12 +243,12 @@ module Policy
 
     private def qsa_get_for_board(board, move, player)
       state = state_from_board(board)
-      qsa.get(state, move, player)
+      qsa.get(state, move)
     end
 
     private def qsa_set_for_board(board, move, player, new_q)
       state = state_from_board(board)
-      qsa.set(state, move, player, new_q)
+      qsa.set(state, move, new_q)
     end
 
     private def state_from_board(board)

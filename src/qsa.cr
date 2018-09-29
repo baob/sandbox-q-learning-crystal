@@ -1,51 +1,44 @@
 # The Q(s,a) matrix from the maths supporting
 # q-learning
-# extended with an extra dimension to support two players
 #
 class Qsa
 
   alias QsaValue = Float32
-  alias QsaValuesIndexedByPlayer = Hash(Int32, QsaValue) 
-  alias QsaValuesIndexedByMoveAndPlayer = Hash(Int32, QsaValuesIndexedByPlayer) 
-  alias QsaValuesIndexedByStateMoveAndPlayer = Hash(Int32, QsaValuesIndexedByMoveAndPlayer) 
-  @qsa :  QsaValuesIndexedByStateMoveAndPlayer
+  alias QsaValuesIndexedByMove = Hash(Int32, QsaValue) 
+  alias QsaValuesIndexedByStateAndMove = Hash(Int32, QsaValuesIndexedByMove) 
+  @qsa :  QsaValuesIndexedByStateAndMove
   # @adjustments : Array(Float32)
 
   def initialize
-    @qsa =  QsaValuesIndexedByStateMoveAndPlayer.new
+    @qsa =  QsaValuesIndexedByStateAndMove.new
     @stats = {} of Symbol => Float32
     @adjustments = [] of Float64
   end
 
-  def set(state, move, player, new_q)
-    old_q = get(state, move, player)
-    @qsa[state] ||= QsaValuesIndexedByMoveAndPlayer.new
-    @qsa[state][move] ||= QsaValuesIndexedByPlayer.new
-    @qsa[state][move][player] = new_q.to_f32
+  def set(state, move, new_q)
+    old_q = get(state, move)
+    @qsa[state] ||= QsaValuesIndexedByMove.new
+    @qsa[state][move] ||= new_q.to_f32
     log_adjustment(new_q, old_q)
     increment_sets
   end
 
-  def get(state, move, player) : QsaValue
-    get_qsa_value_indexed_by_player(state, move, player)
+  def get(state, move) : QsaValue
+    safe_get_move(state, move)
   end
 
-  def get_qsa_value_indexed_by_player(state, move, player) : QsaValue
-    safe_get_move(state, move)[player]? || 0.0_f32
+  def safe_get_move(state, move) : QsaValue
+    safe_get_state(state)[move]? || 0.0_f32
   end
 
-  def safe_get_move(state, move) : QsaValuesIndexedByPlayer
-    safe_get_state(state)[move]? || QsaValuesIndexedByPlayer.new
-  end
-
-  def safe_get_state(state) : QsaValuesIndexedByMoveAndPlayer
-    @qsa[state]? || QsaValuesIndexedByMoveAndPlayer.new
+  def safe_get_state(state) : QsaValuesIndexedByMove
+    @qsa[state]? || QsaValuesIndexedByMove.new
   end
 
   getter :qsa
 
   def qsa_non_trivial
-    @qsa.reject{ |_state, svalue| svalue.reject{ |_move, mvalue| mvalue.select{ |_player, pvalue| pvalue.abs > 0.001 } .empty? }.empty? }
+    @qsa.reject{ |_state, svalue| svalue.select{ |_move, mvalue| mvalue.abs > 0.001 } .empty? }
   end
 
   def inspect
@@ -60,11 +53,7 @@ class Qsa
 
   def values_count
     @qsa.reduce(0) do |total, (_k_state, v_state)|
-      v_state_size = v_state.reduce(0) do |total, (_k_action, v_action)|
-        total += v_action.size # accumulating no players in each action
-        total
-      end
-      total += v_state_size # accumulating no players in each state
+      total += v_state.size # accumulating no of QsaValues in each state
       total
     end
   end
