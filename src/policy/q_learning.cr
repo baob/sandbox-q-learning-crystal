@@ -5,14 +5,14 @@ require "../qsa"
 module Policy
   class QLearning < Base
 
-    def self.policy
-      new
+    def self.policy(trace = false)
+      new(trace: trace)
     end
     
 
     property :explore_percent, :learning_rate, :discount
 
-    def initialize
+    def initialize(trace : Bool = trace)
 
       # Date:   Sat Sep 9 00:16:21 2017 +0100
 
@@ -29,6 +29,7 @@ module Policy
       @learning_rate = 0.5
       @discount = 0.9
       @qsa = Qsa.new
+      @trace = trace
     end
 
     def play(board, as_player)
@@ -48,11 +49,13 @@ module Policy
     end
 
     def choose_exploiting_move(board, player, moves)
+      puts "\nExploit move:" if @trace
       return moves.first if moves.size == 1
       moves.sort { |move1, move2| total_qsa_get_for_board(board, move1, player) <=> total_qsa_get_for_board(board, move2, player) }.last
     end
 
     def choose_exploring_move(board, player, moves)
+      puts "\nExplore move:" if @trace
       return moves.first if moves.size == 1
       exploring_moves = moves.dup
       exploring_moves.delete(choose_exploiting_move(board, player, moves))
@@ -90,19 +93,25 @@ module Policy
       puts qsa.inspect
 
       puts  "\nqsa.qsa[0] shows a preference (higher Q) for opening with a corner play (moves 0, 2, 6 and 8) ?"
-      puts "Corners:"
-      puts "qsa.qsa[0][0] #{qsa.qsa[0][0]}"
-      puts "qsa.qsa[0][2] #{qsa.qsa[0][2]}"
-      puts "qsa.qsa[0][6] #{qsa.qsa[0][6]}"
-      puts "qsa.qsa[0][8] #{qsa.qsa[0][8]}"
-      puts "Edges:"
-      puts "qsa.qsa[0][1] #{qsa.qsa[0][1]}"
-      puts "qsa.qsa[0][3] #{qsa.qsa[0][3]}"
-      puts "qsa.qsa[0][5] #{qsa.qsa[0][5]}"
-      puts "qsa.qsa[0][7] #{qsa.qsa[0][7]}"
-      puts "Centre:"
-      puts "qsa.qsa[0][4] #{qsa.qsa[0][4]}"
-      puts "\n"
+      if qsa.qsa[0]? 
+        puts "Corners:"
+        puts "qsa.qsa[0][0] #{qsa.qsa[0][0]}" if qsa.qsa[0][0]?
+        puts "qsa.qsa[0][2] #{qsa.qsa[0][2]}" if qsa.qsa[0][2]?
+        puts "qsa.qsa[0][6] #{qsa.qsa[0][6]}" if qsa.qsa[0][6]?
+        puts "qsa.qsa[0][8] #{qsa.qsa[0][8]}" if qsa.qsa[0][8]?
+        puts "Edges:"
+        puts "qsa.qsa[0][1] #{qsa.qsa[0][1]}" if qsa.qsa[0][1]?
+        puts "qsa.qsa[0][3] #{qsa.qsa[0][3]}" if qsa.qsa[0][3]?
+        puts "qsa.qsa[0][5] #{qsa.qsa[0][5]}" if qsa.qsa[0][5]?
+        puts "qsa.qsa[0][7] #{qsa.qsa[0][7]}" if qsa.qsa[0][7]?
+        puts "Centre:"
+        puts "qsa.qsa[0][4] #{qsa.qsa[0][4]}" if qsa.qsa[0][4]?
+      else
+        puts "No qsa.qsa[0]?..."
+        puts "qsa.qsa.keys #{qsa.qsa.keys}"
+      end
+     puts "\n"
+
     end
 
     # private
@@ -122,9 +131,25 @@ module Policy
     end
 
     private def recalculate_q(board, move, new_board, player)
-      new_q = (1.0 - @learning_rate) * qsa_get_for_board(board, move, player) +
-              @learning_rate * (reward(new_board, player) + @discount * value(new_board, player))
+      old_q = qsa_get_for_board(board, move, player)
+      new_reward = reward(new_board, player)
+      new_value = value(new_board, player)
+
+      new_q = (1.0 - @learning_rate) * old_q +
+              @learning_rate * (new_reward + @discount * new_value)
       qsa_set_for_board(board, move, player, new_q)
+      if @trace
+        plays_so_far = board.to_a.count{ |p| p != 0 }
+        puts "old_q: #{old_q}"
+        puts "new_reward: #{new_reward}"
+        puts "new_value: #{new_value}"
+        puts "new_q: #{new_q}"
+        puts "plays so far #{plays_so_far}"
+        puts "state_from_board(board) #{state_from_board(board)}"
+        puts "move #{move}"
+        puts "player #{player}"
+        puts "\n"
+      end
     end
 
     private def total_qsa_get_for_board(board, move, player) : Float32
