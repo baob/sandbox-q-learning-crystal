@@ -69,6 +69,39 @@ module Policy
 
     getter :qsa
 
+    def assess
+
+      # Indicators of training success:
+
+      # ql.qsa.inspect shows decreasing adjustments => convergence
+
+      # Stats at end of series indicate high number of draws or
+      # wins for QL player
+
+      # ql.qsa.qsa[0] shows a preference (higher Q) for opening with a
+      # corner play (moves 0, 2, 6 and 8). Can also check this with
+      # puts ql.play(Board.new, 1).to_s
+
+      # ql.qsa.inspect shows nearing 4520 different states and 16165 distinct
+      # q-values
+
+      puts  "\nshows decreasing adjustments => convergence ?"
+      puts "shows nearing 4520 different states and 16165 distinct q-values ?"
+      puts qsa.inspect
+
+      puts  "\nqsa.qsa[0] shows a preference (higher Q) for opening with a corner play (moves 0, 2, 6 and 8) ?"
+      puts "qsa.qsa[0][0] #{qsa.qsa[0][0]}"
+      puts "qsa.qsa[0][2] #{qsa.qsa[0][2]}"
+      puts "qsa.qsa[0][6] #{qsa.qsa[0][6]}"
+      puts "qsa.qsa[0][8] #{qsa.qsa[0][8]}"
+      puts "..."
+      puts "qsa.qsa[0][1] #{qsa.qsa[0][1]}"
+      puts "qsa.qsa[0][3] #{qsa.qsa[0][3]}"
+      puts "qsa.qsa[0][4] #{qsa.qsa[0][4]}"
+      puts "qsa.qsa[0][5] #{qsa.qsa[0][5]}"
+      puts "qsa.qsa[0][7] #{qsa.qsa[0][7]}"
+    end
+
     # private
 
     private def play_generic(board, as_player)

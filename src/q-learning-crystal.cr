@@ -21,29 +21,5 @@ module Q::Learning::Crystal
   Game.new(ql, Policy::WinRandom.policy, trace: true).play  # to see one game (q-learning versus good-but-a-bit-random)
   
   # Indicators of training success:
-
-  # ql.qsa.inspect shows decreasing adjustments => convergence
-
-  # Stats at end of series indicate high number of draws or
-  # wins for QL player
-
-  # ql.qsa.qsa[0] shows a preference (higher Q) for opening with a
-  # corner play (moves 0, 2, 6 and 8). Can also check this with
-  # puts ql.play(Board.new, 1).to_s
-
-  # ql.qsa.inspect shows nearing 4520 different states and 16165 distinct
-  # q-values
-
-  puts  "\nshows decreasing adjustments => convergence ?"
-  puts "shows nearing 4520 different states and 16165 distinct q-values ?"
-  puts ql.qsa.inspect
-
-  puts  "\nql.qsa.qsa[0] shows a preference (higher Q) for opening with a corner play (moves 0, 2, 6 and 8) ?"
-  puts ql.qsa.qsa[0]
-
-  Game.new(ql, Policy::WinRandom.policy, trace: true).play_best
-  Game.new(ql, Policy::WinRandom.policy, trace: true).play_best
-  Game.new(ql, Policy::WinRandom.policy, trace: true).play_best
-  Game.new(ql, Policy::WinRandom.policy, trace: true).play_best
-
+  ql.assess
 end
