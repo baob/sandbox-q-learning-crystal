@@ -10,7 +10,7 @@ module Policy
     end
     
 
-    property :explore_percent, :learning_rate, :discount
+    property :explore_percent, :learning_rate, :discount, :trace
 
     def initialize(trace : Bool = trace)
 
