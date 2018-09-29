@@ -54,23 +54,38 @@ module Policy
       if @trace
         puts "START ordering by qsa get (to choose Exploit move)"
       end
-      moves_ordered_by_total_qsa_get = moves.sort { |move1, move2| total_qsa_get_for_board(board, move1, player) <=> total_qsa_get_for_board(board, move2, player) }
+      moves_ordered_by_total_qsa_get = moves.sort { |move1, move2| total_qsa_get_for_board(board, move1, player, trace: false) <=> total_qsa_get_for_board(board, move2, player, trace: false) }
       move = moves_ordered_by_total_qsa_get.last
       if @trace
         puts "possible moves #{moves}"
         puts "moves_ordered_by_total_qsa_get #{moves_ordered_by_total_qsa_get}"
-        puts "Exploiting move #{move}"
         puts "END ordering by qsa get (to choose Exploit move)"
+        puts "Exploiting move #{move}"
       end
       move
     end
 
     def choose_exploring_move(board, player, moves)
-      puts "\nExplore move:" if @trace
-      return moves.first if moves.size == 1
-      exploring_moves = moves.dup
-      exploring_moves.delete(choose_exploiting_move(board, player, moves))
-      exploring_moves.sample
+      if @trace
+        puts "\nExplore move:" 
+        puts "possible moves #{moves}"
+      end
+
+      if moves.size == 1
+        move = moves.first
+      else
+        exploring_moves = moves.dup
+        exploring_moves.delete(choose_exploiting_move(board, player, moves))
+        move = exploring_moves.sample
+        if @trace
+          puts "exploring moves #{exploring_moves}"
+        end
+      end
+
+      if @trace
+        puts "Exploring move #{move}"
+      end
+    move
     end
 
     def inspect
@@ -152,10 +167,10 @@ module Policy
       if @trace
         plays_so_far = board.to_a.count{ |p| p != 0 }
         puts "\n"
-        puts "old_q: #{old_q}"
-        puts "new_reward: #{new_reward}"
-        puts "new_value: #{new_value}"
-        puts "new_q: #{new_q}"
+        puts "old_q: #{old_q} (qsa_get_for_board(board, move: #{move}, player: #{player}))"
+        puts "new_reward: #{new_reward} (reward(new_board, player: #{player}))"
+        puts "new_value: #{new_value} (value(new_board, player: #{player}))"
+        puts "new_q: #{new_q} (balance old an new with @learning_rate #{@learning_rate})"
         puts "plays so far #{plays_so_far}"
         puts "state_from_board(board) #{state_from_board(board)}"
         puts "move #{move}"
@@ -164,7 +179,7 @@ module Policy
       end
     end
 
-    private def total_qsa_get_for_board(board, move, player) : Float32
+    private def total_qsa_get_for_board(board, move, player, trace = @trace) : Float32
       state = state_from_board(board)
 
       # TODO: This may be mistaken. Either "I" move or "they" do,
@@ -175,7 +190,7 @@ module Policy
       value_to_player       = qsa.get(state, move, player)
       value_to_other_player = qsa.get(state, move, other_player(player))
       total = value_to_player - value_to_other_player
-      if @trace
+      if trace
         puts "\ntotal_qsa_get for possible move #{move} on board_state #{state}"
         puts "qsa value_to player #{player}: #{value_to_player}"
         puts "qsa value_to player #{other_player(player)}: #{value_to_other_player}"
