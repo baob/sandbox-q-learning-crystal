@@ -51,7 +51,18 @@ module Policy
     def choose_exploiting_move(board, player, moves)
       puts "\nExploit move:" if @trace
       return moves.first if moves.size == 1
-      moves.sort { |move1, move2| total_qsa_get_for_board(board, move1, player) <=> total_qsa_get_for_board(board, move2, player) }.last
+      if @trace
+        puts "START ordering by qsa get (to choose Exploit move)"
+      end
+      moves_ordered_by_total_qsa_get = moves.sort { |move1, move2| total_qsa_get_for_board(board, move1, player) <=> total_qsa_get_for_board(board, move2, player) }
+      move = moves_ordered_by_total_qsa_get.last
+      if @trace
+        puts "possible moves #{moves}"
+        puts "moves_ordered_by_total_qsa_get #{moves_ordered_by_total_qsa_get}"
+        puts "Exploiting move #{move}"
+        puts "END ordering by qsa get (to choose Exploit move)"
+      end
+      move
     end
 
     def choose_exploring_move(board, player, moves)
@@ -140,6 +151,7 @@ module Policy
       qsa_set_for_board(board, move, player, new_q)
       if @trace
         plays_so_far = board.to_a.count{ |p| p != 0 }
+        puts "\n"
         puts "old_q: #{old_q}"
         puts "new_reward: #{new_reward}"
         puts "new_value: #{new_value}"
@@ -160,7 +172,16 @@ module Policy
       # generalise to N players, move to QSA then write specs.
       # Maybe the answer is: If "I" have qsa values, take the max of those.
       #           otherwise: If "they" gave qsa value take the min (or max) of -ve of those
-      qsa.get(state, move, player) - qsa.get(state, move, other_player(player))
+      value_to_player       = qsa.get(state, move, player)
+      value_to_other_player = qsa.get(state, move, other_player(player))
+      total = value_to_player - value_to_other_player
+      if @trace
+        puts "\ntotal_qsa_get for possible move #{move} on board_state #{state}"
+        puts "qsa value_to player #{player}: #{value_to_player}"
+        puts "qsa value_to player #{other_player(player)}: #{value_to_other_player}"
+        puts "net value to player #{player}: #{total}"
+      end
+      total
     end
 
     private def qsa_get_for_board(board, move, player)
@@ -194,12 +215,16 @@ module Policy
     end
 
     private def value(board, player)
+      puts "\nSTART determining value of board to player #{player}" if @trace
       qsa_get_for_options = board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }
-      if qsa_get_for_options.empty?
+      r = if qsa_get_for_options.empty?
         0.0
       else
         qsa_get_for_options.max
       end
+      puts "value of board #{state_from_board(board)} to player #{player} is #{r}" if @trace
+      puts "END determining value of board to player #{player}" if @trace
+      r
     end
 
     private def other_player(player)
