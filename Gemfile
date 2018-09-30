@@ -8,3 +8,4 @@ gem 'rspec'
 gem 'guard'
 gem 'guard-rspec'
 gem 'terminal-notifier-guard'
+gem 'ffi', '~> 1.9.24' # to fix vulnerability CVE-2018-1000201
