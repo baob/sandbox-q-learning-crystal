@@ -1,9 +1,14 @@
-require_relative 'win_now'
+require "./win_now"
 
 module Policy
   class WinNowBlock < WinNow
 
-    class << self
+    def self.policy
+      new
+    end
+    
+
+    # class << self
 
       def chosen_move(board, player, moves)
         winning_move(board, player, moves) ||
@@ -21,7 +26,7 @@ module Policy
       def other_player(player)
         3 - player
       end
-    end
+    # end
 
   end
 end

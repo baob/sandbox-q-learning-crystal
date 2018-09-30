@@ -1,9 +1,12 @@
-require_relative 'win_now_block'
+require "./win_now_block"
 
 module Policy
   class WinNowBlockNaiveLine < WinNowBlock
-
-    class << self
+    def self.policy
+      new
+    end
+    
+    # class << self
 
       def chosen_move(board, player, moves)
         winning_move(board, player, moves) ||
@@ -13,7 +16,8 @@ module Policy
       end
 
       def naive_line_move(board, player, moves)
-        naive_line_moves(board, player, moves).sample
+        moves = naive_line_moves(board, player, moves)
+        moves.empty? ? nil : moves.sample
       end
 
       # Choose lines that might be a winner next move
@@ -26,7 +30,7 @@ module Policy
         end
       end
 
-    end
+    # end
 
   end
 end

@@ -1,6 +1,6 @@
 module Policy
   class Base
-    class << self
+    # class << self
 
       def play(board, as_player)
         moves = move_options(board)
@@ -8,8 +8,8 @@ module Policy
         new_board = board.apply_move(move, as_player)
       end
 
-      def chosen_move(board, player, moves)
-        raise NotImplementedError # Implement in sub-classes
+      def chosen_move(_board, _player, _moves)
+        raise Exception.new("NotImplementedError") # Implement in sub-classes
       end
 
       def move_options(board)
@@ -20,6 +20,6 @@ module Policy
         play(*args)
       end
 
-    end
+    # end
   end
 end

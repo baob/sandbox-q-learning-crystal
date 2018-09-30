@@ -1,9 +1,13 @@
-require_relative 'win_now_block_naive_line'
+require "./win_now_block_naive_line"
 
 module Policy
   class WinNowBlockTrap < WinNowBlockNaiveLine
 
-    class << self
+    def self.policy
+      new
+    end
+    
+    # class << self
 
       def chosen_move(board, player, moves)
         winning_move(board, player, moves) ||
@@ -14,7 +18,8 @@ module Policy
       end
 
       def trap_move(board, player, moves)
-        trap_moves(board, player, moves).sample
+        moves = trap_moves(board, player, moves)
+        moves.empty? ? nil : moves.sample
       end
 
       # Choose lines that offer 2 winning moves next time
@@ -26,7 +31,7 @@ module Policy
         end
       end
 
-    end
+    # end
 
   end
 end

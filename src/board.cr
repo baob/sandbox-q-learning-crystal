@@ -1,29 +1,32 @@
 class Board
 
   NUMBER_OF_CELLS_PER_ROW = 3
-  NUMBER_OF_CELLS_IN_BOARD = NUMBER_OF_CELLS_PER_ROW ** 2
+  NUMBER_OF_CELLS_IN_BOARD = NUMBER_OF_CELLS_PER_ROW**2
   ENCODED_STATE_RADIX = 3
   CELL_INDEXES = 0..(NUMBER_OF_CELLS_IN_BOARD - 1)
   EMPTY_CELL = 0
-  PLAYERS = [1,2]
+  PLAYERS = [1, 2]
 
-  class << self
+  @board : Array(Int32)
 
-    # state is a transformation of each of the boards cells to digits in a base-3 number
-    def from_state(state)
-      board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) do |n, x|
-        q, r = x.pop.divmod(ENCODED_STATE_RADIX) ; x.push(q) ; x.unshift(r)
-      end[CELL_INDEXES]
+  # class << self
+  
 
-      new(board_moves)
-    end
+  # state is a transformation of each of the boards cells to digits in a base-3 number
+  def self.from_state(state)
+    board_moves = NUMBER_OF_CELLS_IN_BOARD.times.each_with_object([state]) do |_n, x|
+      q, r = x.pop.divmod(ENCODED_STATE_RADIX) ; x.push(q) ; x.unshift(r)
+    end[CELL_INDEXES]
 
-    def other_player(player)
-      PLAYERS.reduce(&:+) - player
-    end
+    new(board_moves)
   end
 
-  def initialize(board = nil)
+  def self.other_player(player)
+    PLAYERS.reduce{|memo, value| memo + value} - player
+  end
+  # end
+
+  def initialize(board : ::Nil | Array(Int32)  = nil )
     @board = board || empty_board
   end
 
@@ -32,19 +35,19 @@ class Board
   end
 
   def move_options
-    @board.each_with_index.select { |cell, index| cell == EMPTY_CELL }.map(&:last)
+    @board.each_with_index.select { |(cell, _index)| cell == EMPTY_CELL }.map { |(cell, index)| index }.to_a
   end
 
   def ==(other)
-    self.to_state == other.to_state
+    to_state == other.to_state
   end
 
   # Player here is a number, 1 or # 2 indicating 1st or 2nd
   #
   def apply_move(move, as_player)
-    raise RuntimeError if @board[move] != EMPTY_CELL
-    raise ArgumentError unless CELL_INDEXES.to_a.include?(move)
-    raise ArgumentError unless PLAYERS.include?(as_player)
+    raise ArgumentError.new if @board[move] != EMPTY_CELL
+    raise ArgumentError.new unless CELL_INDEXES.to_a.includes?(move)
+    raise ArgumentError.new unless PLAYERS.includes?(as_player)
 
     new_board = @board.dup
     new_board[move] = as_player
@@ -78,7 +81,7 @@ class Board
 
   def winner
     PLAYERS.each { |player| return player if is_win_for?(player) }
-    return
+    nil
   end
 
   def game_over?
@@ -89,16 +92,18 @@ class Board
     move_options.size == 0
   end
 
-  def to_s(tokens = PLAYERS.map(&:to_s).reduce(&:+))
+  def to_s(tokens = PLAYERS.map{ |p| p.to_s }.reduce{ |p1, p2| p1 + p2 })
     count = 0
-    @board.each_with_object('') do |cell, string|
-      if cell == EMPTY_CELL
-        string << '.'
-      else
-        string << tokens[cell-1]
+      String.build do |str|
+      @board.each_with_object(str) do |cell, string|
+        if cell == EMPTY_CELL
+          string << '.'
+        else
+          string << tokens[cell - 1].to_s
+        end
+        count += 1
+        string << "\n" if count % NUMBER_OF_CELLS_PER_ROW == 0
       end
-      count += 1
-      string << "\n" if count % NUMBER_OF_CELLS_PER_ROW == 0
     end
   end
 
@@ -121,9 +126,11 @@ class Board
     [2, 4, 6]
   ]
 
-  private
+  # private
 
-  def empty_board
-    NUMBER_OF_CELLS_IN_BOARD.times.map { EMPTY_CELL }
+  private def empty_board
+    # NUMBER_OF_CELLS_IN_BOARD.times.map { EMPTY_CELL }
+
+    [ EMPTY_CELL ] * NUMBER_OF_CELLS_IN_BOARD
   end
 end

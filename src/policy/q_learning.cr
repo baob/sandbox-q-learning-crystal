@@ -1,11 +1,16 @@
-require 'board'
-require_relative 'base'
-require 'qsa'
+require "../board"
+require "./base"
+require "../qsa"
 
 module Policy
   class QLearning < Base
 
-    attr_accessor :explore_percent, :learning_rate, :discount
+    def self.policy
+      new
+    end
+    
+
+    property :explore_percent, :learning_rate, :discount
 
     def initialize
 
@@ -44,7 +49,7 @@ module Policy
 
     def choose_exploiting_move(board, player, moves)
       return moves.first if moves.size == 1
-      moves.max { |move1, move2| total_qsa_get_for_board(board, move1, player) <=> total_qsa_get_for_board(board, move2, player) }
+      moves.sort { |move1, move2| total_qsa_get_for_board(board, move1, player) <=> total_qsa_get_for_board(board, move2, player) }.last
     end
 
     def choose_exploring_move(board, player, moves)
@@ -59,15 +64,15 @@ module Policy
       " explore_percent=\"#{@explore_percent}\""\
       " learning_rate=\"#{@learning_rate}\""\
       " discount=\"#{@discount}\""\
-      '>'
+      ">"
     end
 
-    attr_reader :qsa
+    getter :qsa
 
-    private
+    # private
 
-    def play_generic(board, as_player)
-      moves = self.class.move_options(board)
+    private def play_generic(board, as_player)
+      moves = move_options(board)
 
       move = yield moves
 
@@ -76,17 +81,17 @@ module Policy
       new_board
     end
 
-    def exploring?
+    private def exploring?
       rand(100) < @explore_percent
     end
 
-    def recalculate_q(board, move, new_board, player)
-      new_q = (1.0 - @learning_rate) * qsa_get_for_board(board, move, player)  +
-              @learning_rate * ( reward(new_board, player) + @discount * value(new_board, player) )
+    private def recalculate_q(board, move, new_board, player)
+      new_q = (1.0 - @learning_rate) * qsa_get_for_board(board, move, player) +
+              @learning_rate * (reward(new_board, player) + @discount * value(new_board, player))
       qsa_set_for_board(board, move, player, new_q)
     end
 
-    def total_qsa_get_for_board(board, move, player)
+    private def total_qsa_get_for_board(board, move, player) : Float32
       state = state_from_board(board)
 
       # TODO: This may be mistaken. Either "I" move or "they" do,
@@ -97,41 +102,46 @@ module Policy
       qsa.get(state, move, player) - qsa.get(state, move, other_player(player))
     end
 
-    def qsa_get_for_board(board, move, player)
+    private def qsa_get_for_board(board, move, player)
       state = state_from_board(board)
       qsa.get(state, move, player)
     end
 
-    def qsa_set_for_board(board, move, player, new_q)
+    private def qsa_set_for_board(board, move, player, new_q)
       state = state_from_board(board)
       qsa.set(state, move, player, new_q)
     end
 
-    def state_from_board(board)
+    private def state_from_board(board)
       board.to_state
     end
 
-    def reward(board, player)
+    private def reward(board, player)
       if board.is_win_for?(player)
-        return 1.0
+        1.0
       elsif board.next_time_is_win_for?(other_player(player))
-        return -1.0
+        -1.0
       elsif board.next_time_could_be_win_for?(other_player(player))
-        return -1.0
+        -1.0
       elsif board.game_over?
-        return 0.2
+        0.2
       elsif board.next_time_is_game_over?
-        return 0.2
+        0.2
       else
-        return -0.1
+        -0.1
       end
     end
 
-    def value(board, player)
-      board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }.max || 0.0
+    private def value(board, player)
+      qsa_get_for_options = board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }
+      if qsa_get_for_options.empty?
+        0.0
+      else
+        qsa_get_for_options.max
+      end
     end
 
-    def other_player(player)
+    private def other_player(player)
       Board.other_player(player) # player number is either 1 or 2
     end
 
