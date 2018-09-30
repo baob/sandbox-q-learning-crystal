@@ -201,13 +201,13 @@ module Policy
         new_q = new_reward
         puts "new_q: #{new_q} (direct assign new_reward because final state)" if @trace
       else
-        new_value = estimate_optimal_future_value(new_board, player)
+        future_value = estimate_optimal_future_value(new_board, player)
 
         new_q = (1.0 - @learning_rate) * old_q +
-                @learning_rate * (new_reward + @discount * new_value)
+                @learning_rate * (new_reward + @discount * future_value)
         if @trace
-          puts "new_value: #{new_value} (estimate_optimal_future_value(new_board, player: #{player}))"
-          puts "new_q: #{new_q} (balance old an new with @learning_rate #{@learning_rate})"
+          puts "future_value: #{future_value} (estimate_optimal_future_value(new_board, player: #{player}))"
+          puts "new_q: #{new_q} (balance old and new with @discount #{@discount} and @learning_rate #{@learning_rate})"
         end
       end
       qsa_set_for_board(board, move, player, new_q)
