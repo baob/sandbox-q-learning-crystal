@@ -275,7 +275,7 @@ module Policy
       r = if qsa_get_for_options.empty?
         0.0
       else
-        qsa_get_for_options.max
+        qsa_get_for_options.min
       end
       puts "value of board at state #{state_from_board(board)} to player #{player} is #{r}" if @trace
       puts "END determining value of board to player #{player}" if @trace
