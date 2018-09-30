@@ -214,7 +214,7 @@ module Policy
       if @trace
         plays_so_far = board.to_a.count{ |p| p != 0 }
         puts "plays so far #{plays_so_far}"
-        puts "state_from_board(board) #{state_from_board(board)}"
+        puts "board_as_array(board) #{board_as_array(board)}"
         puts "move #{move}"
         puts "player #{player}"
         puts "\n"
@@ -255,6 +255,10 @@ module Policy
       board.to_state
     end
 
+    private def board_as_array(board)
+      board.to_a
+    end
+
     private def reward(board, player)
       if board.is_win_for?(player)
         1.0
@@ -289,7 +293,7 @@ module Policy
       else
         qsa_get_for_options.min
       end
-      puts "value of board at state #{state_from_board(board)} to player #{player} is #{r}" if @trace
+      puts "value of board at state #{board_as_array(board)} to player #{player} is #{r}" if @trace
       puts "END determining value of board to player #{player}" if @trace
       r
     end
