@@ -22,30 +22,33 @@ module Q::Learning::Crystal
 
 
   ql = Policy::QLearning.policy # set up our untrained q-learning 'policy'
-  ql.discount = 0.9
-  ql.explore_percent = 90
+  ql.discount = 0.95
+  ql.explore_percent = 99
 
-  ql.learning_rate = 0.512
-  Series.new(ql, Policy::WinRandom.policy, 5000).play  # to run a training series
-  ql.assess
+  ql.learning_rate = 0.2
 
-  ql.learning_rate = 0.256
-  Series.new(ql, Policy::WinRandom.policy, 10000).play  # to run a training series
-  ql.assess
-
-  ql.learning_rate = 0.128
+  # ql.learning_rate = 0.512
   Series.new(ql, Policy::WinRandom.policy, 20000).play  # to run a training series
   ql.assess
 
-  ql.learning_rate = 0.064
+  # ql.learning_rate = 0.256
   Series.new(ql, Policy::WinRandom.policy, 40000).play  # to run a training series
   ql.assess
 
-  ql.learning_rate = 0.032
+  # ql.learning_rate = 0.128
   Series.new(ql, Policy::WinRandom.policy, 80000).play  # to run a training series
   ql.assess
 
-  Game.new(ql, Policy::WinRandom.policy, trace: true).play  # to see one game (q-learning versus good-but-a-bit-random)
+  # ql.learning_rate = 0.064
+  Series.new(ql, Policy::WinRandom.policy, 160000).play  # to run a training series
+  ql.assess
+
+  # ql.learning_rate = 0.032
+  Series.new(ql, Policy::WinRandom.policy, 320000).play  # to run a training series
+  ql.assess
+
+  ql.trace = true
+  Game.new(ql, Policy::WinRandom.policy, trace: true).play_best  # to see one game (q-learning versus good-but-a-bit-random)
 
   
   # Indicators of training success:
