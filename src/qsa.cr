@@ -31,15 +31,15 @@ class Qsa
   end
 
   def get_qsa_value_indexed_by_player(state, move, player) : QsaValue
-    safe_get_move(state, move)[player] ||= 0.0
+    safe_get_move(state, move)[player]? || 0.0_f32
   end
 
   def safe_get_move(state, move) : QsaValuesIndexedByPlayer
-    safe_get_state(state)[move] ||= QsaValuesIndexedByPlayer.new
+    safe_get_state(state)[move]? || QsaValuesIndexedByPlayer.new
   end
 
   def safe_get_state(state) : QsaValuesIndexedByMoveAndPlayer
-    @qsa[state] ||= QsaValuesIndexedByMoveAndPlayer.new
+    @qsa[state]? || QsaValuesIndexedByMoveAndPlayer.new
   end
 
   getter :qsa
