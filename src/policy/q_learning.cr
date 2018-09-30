@@ -165,6 +165,8 @@ module Policy
 
       move = yield moves
 
+      puts "Making move #{move} for player #{as_player} on board #{board_as_array(board)}" if @trace
+
       new_board = board.apply_move(move, as_player)
       recalculate_q(board, move, new_board, as_player)
       new_board
@@ -221,7 +223,7 @@ module Policy
       value_to_other_player = qsa.get(state, move, other_player(player))
       total = value_to_player - value_to_other_player
       if trace
-        puts "\ntotal_qsa_get for possible move #{move} on board_state #{state}"
+        puts "\ntotal_qsa_get for possible move #{move} on board #{board_as_array(board)}"
         puts "qsa value_to player #{player}: #{value_to_player}"
         puts "qsa value_to player #{other_player(player)}: #{value_to_other_player}"
         puts "net value to player #{player}: #{total}"
