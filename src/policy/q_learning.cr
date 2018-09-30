@@ -251,11 +251,11 @@ module Policy
       elsif board.next_time_could_be_win_for?(other_player(player))
         -1.0
       elsif board.game_over?
-        0.2
+        0.75
       elsif board.next_time_is_game_over?
-        0.2
+        0.75
       else
-        0.1
+        0.5
       end
     end
 
