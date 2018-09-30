@@ -71,7 +71,7 @@ module Policy
         puts "START ordering by qsa get (to choose Exploit move)"
       end
       qsa_values_by_move = moves.reduce({} of Int32 => Float32) do |memo, move|
-        memo[move] = total_qsa_get_for_board(board, move, player, trace: @trace)
+        memo[move] = total_qsa_get_for_board(board, move, player, trace: false)
         memo
       end
       puts "qsa_values_by_move: #{qsa_values_by_move}" if @trace
@@ -174,21 +174,33 @@ module Policy
       rand(100) < @explore_percent
     end
 
+    # Reference:  https://en.wikipedia.org/wiki/Q-learning#Algorithm
+
     private def recalculate_q(board, move, new_board, player)
       old_q = qsa_get_for_board(board, move, player)
       new_reward = reward(new_board, player)
-      new_value = value(new_board, player)
-
-      new_q = (1.0 - @learning_rate) * old_q +
-              @learning_rate * (new_reward + @discount * new_value)
-      qsa_set_for_board(board, move, player, new_q)
       if @trace
-        plays_so_far = board.to_a.count{ |p| p != 0 }
         puts "\n"
         puts "old_q: #{old_q} (qsa_get_for_board(board, move: #{move}, player: #{player}))"
         puts "new_reward: #{new_reward} (reward(new_board, player: #{player}))"
-        puts "new_value: #{new_value} (value(new_board, player: #{player}))"
-        puts "new_q: #{new_q} (balance old an new with @learning_rate #{@learning_rate})"
+      end
+
+      if final_state?(new_board, player)
+        new_q = new_reward
+        puts "new_q: #{new_q} (direct assign new_reward because final state)" if @trace
+      else
+        new_value = estimate_optimal_future_value(new_board, player)
+
+        new_q = (1.0 - @learning_rate) * old_q +
+                @learning_rate * (new_reward + @discount * new_value)
+        if @trace
+          puts "new_value: #{new_value} (estimate_optimal_future_value(new_board, player: #{player}))"
+          puts "new_q: #{new_q} (balance old an new with @learning_rate #{@learning_rate})"
+        end
+      end
+      qsa_set_for_board(board, move, player, new_q)
+      if @trace
+        plays_so_far = board.to_a.count{ |p| p != 0 }
         puts "plays so far #{plays_so_far}"
         puts "state_from_board(board) #{state_from_board(board)}"
         puts "move #{move}"
@@ -247,15 +259,25 @@ module Policy
       end
     end
 
-    private def value(board, player)
+    private def final_state?(board, player) : Bool
+      if @trace
+        puts "board.is_win_for?(player: #{player}) #{board.is_win_for?(player)}"
+        puts "board.game_over? #{board.game_over?}"
+      end
+      return true if board.is_win_for?(player) 
+      return true if board.game_over?
+      false
+    end
+
+    private def estimate_optimal_future_value(board, player)
       puts "\nSTART determining value of board to player #{player}" if @trace
-      qsa_get_for_options = board.move_options.map{ |move| total_qsa_get_for_board(board, move, player) }
+      qsa_get_for_options = board.move_options.map{ |move| 0.0 - total_qsa_get_for_board(board, move, player) }
       r = if qsa_get_for_options.empty?
         0.0
       else
         qsa_get_for_options.max
       end
-      puts "value of board #{state_from_board(board)} to player #{player} is #{r}" if @trace
+      puts "value of board at state #{state_from_board(board)} to player #{player} is #{r}" if @trace
       puts "END determining value of board to player #{player}" if @trace
       r
     end
