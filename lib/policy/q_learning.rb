@@ -8,7 +8,19 @@ module Policy
     attr_accessor :explore_percent, :learning_rate, :discount
 
     def initialize
-      @explore_percent = 67
+
+      # Date:   Sat Sep 9 00:16:21 2017 +0100
+
+      # For future ref, it looks like optimal 'training'
+      # is acheived with 50K - 300K games against varied
+      # opponents (including the completely random) with the
+      # explore % set high (say 90%) and the learning rate
+      # varing from 0.5 to 0.01 (to force convergence). Other
+      # strategies (e.g. learning rate 0.9 against consistent
+      # non-random opponent) can lead to convergence on
+      # suboptimal solutions.
+
+      @explore_percent = 90
       @learning_rate = 0.5
       @discount = 0.9
       @qsa = Qsa.new
