@@ -47,6 +47,8 @@ class Game
 
   private def playloop(player : Player, the_other : Player, best)
     tokens = player.token + the_other.token
+    player.number = 1
+    the_other.number = 2
     
     loop do
       puts "\nplayer making a move #{player.inspect}" if @trace
