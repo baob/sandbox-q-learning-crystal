@@ -1,10 +1,10 @@
 {
     "window.title": "q-learning-crystal : ${activeEditorMedium}",
     "workbench.colorCustomizations": {
-        "titleBar.activeForeground": "#000",
-        "titleBar.inactiveForeground": "#000000cc",
-        "titleBar.activeBackground": "#d38c46",
-        "titleBar.inactiveBackground": "#cc9966",
-        "activityBar.background": "#a8723c"
+        // "titleBar.activeForeground": "#000",
+        // "titleBar.inactiveForeground": "#000000cc",
+        // "titleBar.activeBackground": "#d38c46",
+        // "titleBar.inactiveBackground": "#cc9966",
+        "activityBar.background": "#333055"
     }
 }
