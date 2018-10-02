@@ -97,19 +97,7 @@ module Policy
       if moves.size == 1
         move = moves.first
       else
-        exploring_moves = moves - choose_exploiting_moves(board, player, moves)
-        if exploring_moves.empty?
-          move = moves.sample
-        else
-          if exploring_moves.size == 1
-            move = exploring_moves.first
-          else
-            move = exploring_moves.sample
-          end
-        end
-        if @trace
-          puts "exploring moves #{exploring_moves}"
-        end
+        move = moves.sample
       end
 
       if @trace
